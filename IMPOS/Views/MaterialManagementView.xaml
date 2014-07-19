@@ -7,7 +7,7 @@
     xmlns:local="clr-namespace:IMPOS.Helpers"  
     xmlns:conv="clr-namespace:IMPOS.Helpers"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        Title="مدیریت کالاها" Initialized="MaterialManagementView_OnInitialized" WindowStartupLocation="CenterScreen" WindowState="Maximized" Width="1400" Height="1200" Icon="..\Images\Logo2.png"  Closed="Window_Closed" SizeChanged="Window_SizeChanged" >
+        Title="ایران صنعت" Initialized="MaterialManagementView_OnInitialized" WindowStartupLocation="CenterScreen" WindowState="Maximized" Width="1400" Height="1200" Icon="..\Images\Logo2.png"  Closed="Window_Closed" SizeChanged="Window_SizeChanged" >
     <Window.Resources>
         <view:MaterialManagementView x:Key="MaterialManagementView"></view:MaterialManagementView>
         <conv:HiddenToCheckedConverter x:Key="HiddenToCheckedConverter"></conv:HiddenToCheckedConverter>
@@ -94,7 +94,12 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <telerik:RadRibbonView VerticalAlignment="Top" telerik:StyleManager.Theme="Office_Blue" FlowDirection="RightToLeft"  HeaderBackground="#FFDBEEF4" ApplicationName="سیستم ایران صنعت" ApplicationButtonVisibility="Collapsed">
+        <telerik:RadRibbonView VerticalAlignment="Top" 
+                               telerik:StyleManager.Theme="Office_Blue" 
+                               FlowDirection="RightToLeft"  
+                               HeaderBackground="#FFDBEEF4" 
+                               ApplicationName="مدیریت کالا" 
+                               ApplicationButtonVisibility="Collapsed">
             <telerik:RadRibbonView.TitleBarBackground>
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                     <GradientStop Color="#FFADC8E5" Offset="1"/>
@@ -103,7 +108,7 @@
                     <GradientStop Color="#FF1C395C" Offset="0.979"/>
                 </LinearGradientBrush>
             </telerik:RadRibbonView.TitleBarBackground>
-            <telerik:RadRibbonTab Header="امکانات" FontFamily="B Zar" FontSize="8" >
+            <telerik:RadRibbonTab Header="امکانات" FontFamily="B Zar" HeaderVisibility="Collapsed" FontSize="8" >
                 <telerik:RadRibbonGroup Header="کالا" Width="Auto" >
                     <Border  Background="Transparent">
                         <telerik:RadRibbonButton Text="جدید" LargeImage="..\Images\New.png" Size="Large" FontFamily="B Zar" Command="{Binding CrudClick}" CommandParameter="new" FontSize="13"
