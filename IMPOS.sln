@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IMPOS", "IMPOS\IMPOS.csproj", "{A09918FF-1ADA-42E0-92B0-65CA776CBEB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IMPOS.BLL", "BAL\IMPOS.BLL.csproj", "{D939F5EE-A013-41C3-BDED-9951A5F6700B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IMPOS.DQL", "IMPOS.DQL\IMPOS.DQL.csproj", "{44D0F07E-AFC6-48DF-BBC8-B88E29E8047C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A09918FF-1ADA-42E0-92B0-65CA776CBEB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A09918FF-1ADA-42E0-92B0-65CA776CBEB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A09918FF-1ADA-42E0-92B0-65CA776CBEB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A09918FF-1ADA-42E0-92B0-65CA776CBEB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D939F5EE-A013-41C3-BDED-9951A5F6700B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D939F5EE-A013-41C3-BDED-9951A5F6700B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D939F5EE-A013-41C3-BDED-9951A5F6700B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D939F5EE-A013-41C3-BDED-9951A5F6700B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44D0F07E-AFC6-48DF-BBC8-B88E29E8047C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44D0F07E-AFC6-48DF-BBC8-B88E29E8047C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44D0F07E-AFC6-48DF-BBC8-B88E29E8047C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44D0F07E-AFC6-48DF-BBC8-B88E29E8047C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,429 @@
+﻿<Window x:Class="IMPOS.Views.GantChartView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+		xmlns:impos="clr-namespace:IMPOS">
+    <Window.DataContext>
+        <impos:GanttViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+
+        <impos:TicksToTimeSpanConverter x:Key="TicksToTimeSpanConverter" />
+        <SolidColorBrush x:Key="HeaderBorderBrush" Color="#FFD6D4D4" />
+
+        <Style TargetType="telerik:RadButton" x:Key="DemoButton">
+            <Setter Property="BorderThickness" Value="0 0 0 0" />
+        </Style>
+        <Style TargetType="telerik:RadButton" x:Key="BigDemoButton">
+            <Setter Property="Width" Value="60" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="Padding" Value="0 10 0 5" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        </Style>
+        <Style TargetType="telerik:RadButton" x:Key="SmallDemoButton">
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Width" Value="120" />
+            <Setter Property="Margin" Value="5 1" />
+            <Setter Property="Padding" Value="5 0" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+        </Style>
+        <Style TargetType="TextBlock" x:Key="DemoGroupTextBlock">
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="10 0 0 0" />
+        </Style>
+        <Style TargetType="TextBlock" x:Key="DemoButtonFooterTextBlock">
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Margin" Value="0 10 0 0" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="#FF373737" />
+        </Style>
+    </Window.Resources>
+
+    <Grid ><!--DataContext="{StaticResource GanttViewModel}"-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <telerik:RadGanttView Grid.Row="1" Name="RgView"></telerik:RadGanttView>
+        <!--<telerik:RadGanttView x:Name="ganttview" TasksSource="{Binding Tasks}" BorderBrush="#FFD6D4D4"
+				BorderThickness="1 0 1 1" SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+				VisibleRange="{Binding VisibleRange}" HighlightedItemsSource="{Binding HighlightedItems}" Grid.Row="1"
+				Margin="0 6 0 0"
+				PixelLength="{Binding Value, ElementName=PixelLength, Converter={StaticResource TicksToTimeSpanConverter}}">
+            <telerik:RadGanttView.Columns>
+                <telerik:TreeColumnDefinition Header="Title" MemberBinding="{Binding Title}" ColumnWidth="240">
+                    <telerik:TreeColumnDefinition.CellEditTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </telerik:TreeColumnDefinition.CellEditTemplate>
+                </telerik:TreeColumnDefinition>
+                <telerik:ColumnDefinition MemberBinding="{Binding Start}" Header="Start" ColumnWidth="120">
+                    <telerik:ColumnDefinition.CellEditTemplate>
+                        <DataTemplate>
+                            <telerik:RadDateTimePicker SelectedValue="{Binding Start,Mode=TwoWay}" />
+                        </DataTemplate>
+                    </telerik:ColumnDefinition.CellEditTemplate>
+                </telerik:ColumnDefinition>
+                <telerik:ColumnDefinition MemberBinding="{Binding End}" Header="End" ColumnWidth="120">
+                    <telerik:ColumnDefinition.CellEditTemplate>
+                        <DataTemplate>
+                            <telerik:RadDateTimePicker SelectedValue="{Binding End,Mode=TwoWay}" />
+                        </DataTemplate>
+                    </telerik:ColumnDefinition.CellEditTemplate>
+                </telerik:ColumnDefinition>
+                <telerik:ColumnDefinition MemberBinding="{Binding Progress}" Header="Progress" ColumnWidth="100">
+                    <telerik:ColumnDefinition.CellEditTemplate>
+                        <DataTemplate>
+                            <telerik:RadNumericUpDown Value="{Binding Progress, Mode=TwoWay}" CustomUnit="%" Minimum="0"
+									Maximum="100" />
+                        </DataTemplate>
+                    </telerik:ColumnDefinition.CellEditTemplate>
+                </telerik:ColumnDefinition>
+                <telerik:ColumnDefinition MemberBinding="{Binding IsMilestone}" Header="IsMilestone" ColumnWidth="100" />
+            </telerik:RadGanttView.Columns>
+        </telerik:RadGanttView>-->
+
+        <!--Header-->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="24" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.RowSpan="2" BorderBrush="{StaticResource HeaderBorderBrush}" BorderThickness="1 1 0 1" />
+            <Border Grid.RowSpan="2" Grid.Column="1" BorderBrush="{StaticResource HeaderBorderBrush}"
+					BorderThickness="1 1 0 1" />
+            <Border Grid.RowSpan="2" Grid.Column="2" BorderBrush="{StaticResource HeaderBorderBrush}"
+					BorderThickness="1 1 0 1" />
+            <Border Grid.RowSpan="2" Grid.Column="3" Grid.ColumnSpan="2"
+					BorderBrush="{StaticResource HeaderBorderBrush}" BorderThickness="1 1 0 1" />
+            <Border Grid.RowSpan="2" Grid.Column="5" BorderBrush="{StaticResource HeaderBorderBrush}"
+					BorderThickness="1 1 0 1" />
+            <Border Grid.RowSpan="2" Grid.Column="6" BorderBrush="{StaticResource HeaderBorderBrush}"
+					BorderThickness="1" />
+
+            <TextBlock Text="ITEMS" Style="{StaticResource DemoGroupTextBlock}" />
+            <TextBlock Grid.Column="1" Text="CHOOSE HIGHLIGHT PATH" Style="{StaticResource DemoGroupTextBlock}" />
+            <TextBlock Grid.Column="2" Text="TASK PROGRESS" Style="{StaticResource DemoGroupTextBlock}" />
+            <TextBlock Grid.Column="3" Grid.ColumnSpan="2" Text="CHANGE VISIBLE RANGE"
+					Style="{StaticResource DemoGroupTextBlock}" />
+            <TextBlock Grid.Column="5" Text="ZOOM" Style="{StaticResource DemoGroupTextBlock}" />
+
+            <!-- ITEMS buttons-->
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <telerik:RadButton Command="{Binding AddCommand}" Style="{StaticResource BigDemoButton}" Width="80">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Width="36" Height="36">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            <Path
+									Data="M4.0000014,0 L7.0000014,0 L7.0000014,3.999999 L11,3.999999 L11,6.999999 L7.0000014,6.999999 L7.0000014,11 L4.0000014,11 L4.0000014,6.999999 L0,6.999999 L0,3.999999 L4.0000014,3.999999 z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="12,12,13,13" Stretch="Fill"
+									StrokeThickness="2" />
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="Add child to selected item"
+								Style="{StaticResource DemoButtonFooterTextBlock}" />
+                    </Grid>
+                </telerik:RadButton>
+                <telerik:RadButton Command="{Binding RemoveCommand}" Style="{StaticResource BigDemoButton}" Width="80">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Width="36" Height="36">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            <Path Data="M11,3.999999 L11,6.999999 L0,6.999999 L0,3.999999 z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="12,16,13,17" Stretch="Fill"
+									StrokeThickness="2" />
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="Remove selected item"
+								Style="{StaticResource DemoButtonFooterTextBlock}" />
+                    </Grid>
+                </telerik:RadButton>
+                <telerik:RadButton Command="{Binding AddMilestoneCommand}" Style="{StaticResource BigDemoButton}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Width="36" Height="36">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            <Path
+									Data="M12.863955,9.8639517 L15.863955,9.8639517 L15.863955,13.863951 L19.863953,13.863951 L19.863953,16.863951 L15.863955,16.863951 L15.863955,20.863953 L12.863955,20.863953 L12.863955,16.863951 L8.8639536,16.863951 L8.8639536,13.863951 L12.863955,13.863951 z M6.3639607,0 L12.727922,6.3639612 L6.3639607,12.727922 L0,6.3639612 z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="9.136,7.136,7,8" Stretch="Fill"
+									StrokeThickness="2" />
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="Add milestone" Style="{StaticResource DemoButtonFooterTextBlock}" />
+                    </Grid>
+                </telerik:RadButton>
+            </StackPanel>
+
+            <!-- CHOOSE HIGHLIGHT PATH buttons-->
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                <telerik:RadButton Command="{Binding HighlightCommand}" CommandParameter="None"
+						Style="{StaticResource BigDemoButton}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Width="36" Height="36">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            <Path
+									Data="M11.5,19.999998 L16,24.499998 L11.5,28.999998 L7,24.499998 z M7.0292606,16 L7.0292606,18 L23.058134,18 L23.058134,16 z M6.0000014,12.000002 L26.891102,12.000002 L26.90435,12.112608 C26.9676,12.717714 27.000002,13.331682 27.000002,13.953003 C27.000002,15.661633 26.754969,17.314661 26.297182,18.880724 L26.26066,19.000002 L6.0000014,19.000002 z M0.99999923,8.999999 L1.9999996,8.999999 L26,8.999999 L26,10 L1.9999996,10 L1.9999996,15.019999 L2.9999981,15.019999 L2.9999981,14.019996 L3.9999981,14.019996 L3.9999981,15.019999 L4.999999,15.019999 L4.999999,16.02 L3.9999981,16.02 L3.9999981,17.02 L2.9999981,17.02 L2.9999981,16.02 L0.99999923,16.015635 z M0,0 L19.788982,0 L20.022097,0.19433914 C21.567886,1.5145296 22.886486,3.0864239 23.912323,4.8453674 L23.999998,5.0000005 L4.6750059,5.0000005 L2.8446312,7 L1.0142566,5.0000005 L0,5.0000005 z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="9,4,0,3" Stretch="Fill"
+									Stroke="{x:Null}" />
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="None" Style="{StaticResource DemoButtonFooterTextBlock}" />
+                    </Grid>
+                </telerik:RadButton>
+                <telerik:RadButton Command="{Binding HighlightCommand}" CommandParameter="All"
+						Style="{StaticResource BigDemoButton}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Width="36" Height="36">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            <Path
+									Data="M11.5,19.999998 L16,24.499998 L11.5,28.999998 L7,24.499998 z M7.0292606,16 L7.0292606,18 L23.058134,18 L23.058134,16 z M6.0000014,12.000002 L26.891102,12.000002 L26.90435,12.112608 C26.9676,12.717714 27.000002,13.331682 27.000002,13.953003 C27.000002,15.661633 26.754969,17.314661 26.297182,18.880724 L26.26066,19.000002 L6.0000014,19.000002 z M0.99999923,8.999999 L1.9999996,8.999999 L26,8.999999 L26,10 L1.9999996,10 L1.9999996,15.019999 L2.9999981,15.019999 L2.9999981,14.019996 L3.9999981,14.019996 L3.9999981,15.019999 L4.999999,15.019999 L4.999999,16.02 L3.9999981,16.02 L3.9999981,17.02 L2.9999981,17.02 L2.9999981,16.02 L0.99999923,16.015635 z M0,0 L19.788982,0 L20.022097,0.19433914 C21.567886,1.5145296 22.886486,3.0864239 23.912323,4.8453674 L23.999998,5.0000005 L4.6750059,5.0000005 L2.8446312,7 L1.0142566,5.0000005 L0,5.0000005 z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="9,4,0,3" Stretch="Fill"
+									Stroke="{x:Null}" />
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="Highlight all" Style="{StaticResource DemoButtonFooterTextBlock}" />
+                    </Grid>
+                </telerik:RadButton>
+                <StackPanel>
+                    <telerik:RadButton Command="{Binding HighlightCommand}" CommandParameter="Summaries"
+							Style="{StaticResource SmallDemoButton}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="24" Height="24">
+                                <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                                <Path
+										Data="M16,0 L16.000002,4.9999943 L14.976689,5.0000005 L13.129975,7 L11.283261,5.0000005 L11.26428,4.218751 L8.3315496,4.2187495 L4.7141175,4.2187514 L4.716742,5.000001 L2.8700278,7.0000005 L1.0233136,5.000001 L2.8610234E-06,5.000001 L0,1.1920931E-06 L6.4000015,7.1525574E-07 z"
+										Margin="3,8" RenderTransformOrigin="0.500000059604645,0.5" Stretch="Fill"
+										Stroke="{x:Null}" Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}">
+                                </Path>
+                            </Grid>
+                            <TextBlock Grid.Column="1" Text="All Summaries" Margin="5,0,0,0" VerticalAlignment="Center" />
+                        </Grid>
+                    </telerik:RadButton>
+                    <telerik:RadButton Command="{Binding HighlightCommand}" CommandParameter="Milestones"
+							Style="{StaticResource SmallDemoButton}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="24" Height="24">
+                                <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                                <Path Data="M6.3639607,0 L12.727922,6.3639612 L6.3639607,12.727922 L0,6.3639612 z"
+										Margin="5.5" Stretch="Fill" StrokeThickness="2" Width="13" Height="13"
+										Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            </Grid>
+                            <TextBlock Grid.Column="1" Text="All Milestones" Margin="5,0,0,0" VerticalAlignment="Center" />
+                        </Grid>
+                    </telerik:RadButton>
+                    <telerik:RadButton Command="{Binding HighlightCommand}" CommandParameter="Children"
+							Style="{StaticResource SmallDemoButton}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="24" Height="24">
+                                <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                                <Path
+										Data="M1.9999998,8.0000019 L3,8.0000019 L3,12.000004 L3.9999981,12.000004 L3.9999981,11.000002 L4.9999981,11.000002 L4.9999981,12.000004 L5.999999,12.000004 L5.999999,9.0000048 L14.999999,9.0000048 L14.999999,15.000005 L5.999999,15.000005 L5.999999,13.000004 L4.9999981,13.000004 L4.9999981,14.000002 L3.9999981,14.000002 L3.9999981,13.000004 L3,13.000004 L1.9999998,13.000002 z M0,0 L13,0 L13,3.0000014 L15,3.0000014 L16,3.0000017 L16,7.000001 L16,8.000001 L1.9999998,8.000001 L1.9999998,7.000001 L14.999999,7.000001 L14.999999,4.0000014 L13,4.0000014 L13,6 L0,6 z"
+										Margin="5,4,3,5" Stretch="Fill" Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            </Grid>
+                            <TextBlock Grid.Column="1" Text="All Children" Margin="5,0,0,0" VerticalAlignment="Center" />
+                        </Grid>
+                    </telerik:RadButton>
+                </StackPanel>
+            </StackPanel>
+
+            <!--TASK PROGRESS buttons-->
+            <StackPanel Grid.Row="1" Grid.Column="2">
+                <telerik:RadButton Command="{Binding ChangeProgressCommand}" CommandParameter="25"
+						Style="{StaticResource SmallDemoButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="24" Height="24">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            <Path
+									Data="M2.0000062,4.0000033 L2.0000062,6.0000033 L8.0000067,6.0000033 L8.0000067,4.0000033 z M0,0 L18,0 L18,7 L0,7 z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="3,8,3,9" Stretch="Fill" />
+                        </Grid>
+                        <TextBlock Grid.Column="1" Text="% 25" Margin="10,0,0,0" VerticalAlignment="Center" />
+                    </Grid>
+                </telerik:RadButton>
+                <telerik:RadButton Command="{Binding ChangeProgressCommand}" CommandParameter="50"
+						Style="{StaticResource SmallDemoButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="24" Height="24">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            <Path
+									Data="M0.99999833,4.0000062 L0.99999833,6.0000062 L10.999998,6.0000062 L10.999998,4.0000062 z M0,0 L18,0 L18,7 L0,7 z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="3,8,3,9" Stretch="Fill" />
+                        </Grid>
+                        <TextBlock Grid.Column="1" Text="% 50" Margin="10,0,0,0" VerticalAlignment="Center" />
+                    </Grid>
+                </telerik:RadButton>
+                <telerik:RadButton Command="{Binding ChangeProgressCommand}" CommandParameter="100"
+						Style="{StaticResource SmallDemoButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="24" Height="24">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            <Path
+									Data="M0.99999458,3.9999938 L0.99999458,5.9999938 L16.999994,5.9999938 L16.999994,3.9999938 z M0,0 L18,0 L18,7 L0,7 z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="3,8,3,9" Stretch="Fill" />
+                        </Grid>
+                        <TextBlock Grid.Column="1" Text="% 100" Margin="10,0,0,0" VerticalAlignment="Center" />
+                    </Grid>
+                </telerik:RadButton>
+            </StackPanel>
+
+            <!--CHANGE VISIBLE RANGE buttons-->
+            <StackPanel Grid.Row="1" Grid.Column="3">
+                <telerik:RadButton Command="{Binding ChangeVisibleRangeCommand}" CommandParameter="CurrentWeek"
+						Width="145" Style="{StaticResource SmallDemoButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="24" Height="24">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            <Path
+									Data="M2,12 L14,12 L14,14 L2,14 z M2,8 L14,8 L14,10 L2,10 z M2,4 L14,4 L14,6 L2,6 z M0,4 L0.99999994,4 L0.99999994,14 L0,14 z M0,0 L14,0 L14,2 L0,2 z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="5" Stretch="Fill" />
+                        </Grid>
+                        <TextBlock Grid.Column="1" Text="Current Week" Margin="5,0,0,0" VerticalAlignment="Center" />
+                    </Grid>
+                </telerik:RadButton>
+                <telerik:RadButton Command="{Binding ChangeVisibleRangeCommand}" Width="145"
+						CommandParameter="CurrentMonth" Style="{StaticResource SmallDemoButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="24" Height="24">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            <Path
+									Data="M3,12.000001 L5,12.000001 L5,14.000001 L3,14.000001 z M0,12.000001 L2,12.000001 L2,14.000001 L0,14.000001 z M12.000004,8.999999 L14.000004,8.999999 L14.000004,10.999999 L12.000004,10.999999 z M9,8.999999 L11,8.999999 L11,10.999999 L9,10.999999 z M6,8.999999 L8,8.999999 L8,10.999999 L6,10.999999 z M3,8.999999 L5,8.999999 L5,10.999999 L3,10.999999 z M0,8.999999 L2,8.999999 L2,10.999999 L0,10.999999 z M12.000004,5.999999 L14.000004,5.999999 L14.000004,7.999999 L12.000004,7.999999 z M9,5.999999 L11,5.999999 L11,7.999999 L9,7.999999 z M6,5.999999 L8,5.999999 L8,7.999999 L6,7.999999 z M3,5.999999 L5,5.999999 L5,7.999999 L3,7.999999 z M0,5.999999 L2,5.999999 L2,7.999999 L0,7.999999 z M12.000004,2.999999 L14.000004,2.999999 L14.000004,4.999999 L12.000004,4.999999 z M9,2.9999988 L11,2.9999988 L11,4.999999 L9,4.999999 z M6,2.9999986 L8,2.9999986 L8,4.999999 L6,4.999999 z M0,0 L14,0 L14,2 L0,2 z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="5" Stretch="Fill" />
+                        </Grid>
+                        <TextBlock Grid.Column="1" Text="Current Month" Margin="5,0,0,0" VerticalAlignment="Center" />
+                    </Grid>
+                </telerik:RadButton>
+                <telerik:RadButton Command="{Binding ChangeVisibleRangeCommand}" Width="145"
+						CommandParameter="CurrentYear" Style="{StaticResource SmallDemoButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="24" Height="24">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" />
+                            <Path
+									Data="M12,3 L14,3 L14,14 L12,14 z M9,3 L11,3 L11,14 L9,14 z M6,3 L8,3 L8,14 L6,14 z M0,3 L2,3 L2,14 L0,14 z M2.9999981,2.9999993 L4.9999981,2.9999993 L4.9999981,13.999999 L2.9999981,13.999999 z M0,0 L14,0 L14,2 L0,2 z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="5" Stretch="Fill" />
+                        </Grid>
+                        <TextBlock Grid.Column="1" Text="Current Year" Margin="5,0,0,0" VerticalAlignment="Center" />
+                    </Grid>
+                </telerik:RadButton>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Grid.Column="4">
+                <telerik:RadButton Command="{Binding PrevWeekCommand}" Style="{StaticResource BigDemoButton}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <Grid HorizontalAlignment="Center" Width="24" VerticalAlignment="Top">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" Width="24" Height="24" />
+                            <Path Height="13" Width="10"
+									Data="F1M329.667,242.3496L324.512,236.8906L324.512,241.3296L331.411,248.6386L338.28,241.3636L338.28,236.9226L333.152,242.3496L333.152,230.0356L329.667,230.0356z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="7,5" RenderTransformOrigin="0.5,0.5"
+									Stretch="Fill" StrokeThickness="2">
+                                <Path.RenderTransform>
+                                    <RotateTransform Angle="90" />
+                                </Path.RenderTransform>
+                            </Path>
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="Previous Week" Style="{StaticResource DemoButtonFooterTextBlock}" />
+                    </Grid>
+
+                </telerik:RadButton>
+                <telerik:RadButton Command="{Binding NextWeekCommand}" Style="{StaticResource BigDemoButton}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Width="24">
+                            <Ellipse Stroke="{telerik:Windows8Resource ResourceKey=AccentBrush}" Width="24" Height="24" />
+                            <Path Height="13" Width="10"
+									Data="F1M329.667,242.3496L324.512,236.8906L324.512,241.3296L331.411,248.6386L338.28,241.3636L338.28,236.9226L333.152,242.3496L333.152,230.0356L329.667,230.0356z"
+									Fill="{telerik:Windows8Resource ResourceKey=AccentBrush}" Margin="7,5,7,5" RenderTransformOrigin="0.5,0.5"
+									Stretch="Fill" StrokeThickness="2">
+
+                                <Path.RenderTransform>
+                                    <RotateTransform Angle="-90" />
+                                </Path.RenderTransform>
+                            </Path>
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="Next Week" Width="30"
+								Style="{StaticResource DemoButtonFooterTextBlock}" />
+                    </Grid>
+                </telerik:RadButton>
+            </StackPanel>
+
+            <!-- ZOOM slider-->
+            <telerik:RadSlider Grid.Row="1" Grid.Column="5" VerticalAlignment="Center" Width="120" x:Name="PixelLength"
+					Minimum="10000000" Maximum="30000000000" Value="18000000000" Margin="10 0 10 15" />
+
+        </Grid>
+    </Grid>
+</Window>

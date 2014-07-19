@@ -1,0 +1,714 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        x:Class="IMPOS.Views.MaterialManagementView"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:local="clr-namespace:IMPOS.Helpers"
+        Title="مدیریت کالاها" FlowDirection="RightToLeft" WindowStartupLocation="CenterScreen" WindowState="Maximized" Width="1200" Height="800" Icon="..\Images\Logo2.png" Loaded="Window_Loaded" Closed="Window_Closed" SizeChanged="Window_SizeChanged">
+    <Window.Resources>
+        <DataTemplate x:Key="ImageGalleryDataTemplate">
+            <Grid>
+                <Border BorderBrush="#FFFFFF" BorderThickness="3"  Width="120" Height="120" Padding="10" Margin="15" CornerRadius="10">
+                    <!--Bind Image Path in Image Control-->
+                    <Image Source="{Binding ImagePath}" Stretch="Fill"  HorizontalAlignment="Center">
+                        <!--View Large Image on Image Control Tooltip-->
+                        <Image.ToolTip>
+                            <Grid>
+                                <Image Source="{Binding ImagePath}" Stretch="Fill" HorizontalAlignment="Center"></Image>
+                            </Grid>
+                        </Image.ToolTip>
+
+                    </Image>
+                </Border>
+            </Grid>
+        </DataTemplate>
+
+        <ItemsPanelTemplate x:Key="ImageGalleryItemsPanelTemplate">
+
+            <!--Display Images on UniformGrid Panel-->
+            <UniformGrid Columns="4" HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
+
+        </ItemsPanelTemplate>
+
+        <Style TargetType="{x:Type telerik:RadPaneGroup}" ><!--BasedOn="{StaticResource {x:Type ScNamespace:MyCustomControl}}"-->
+            <Setter Property="BorderBrush" Value="DodgerBlue"/>
+            <Setter Property="Background" Value="#FFC6D9F1"/>
+        </Style>
+
+
+        <DataTemplate x:Key="s11">
+            <TextBlock Text="ساختار کالاها/فهرست کالا" FontFamily="Tahoma" TextAlignment="Center" Margin="30,0,0,0" Foreground="Red"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="s12">
+            <TextBlock Text="اجزای کالا" FontFamily="Tahoma"  TextAlignment="Center" Margin="30,0,0,0" Foreground="Red"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="s21">
+            <TextBlock Text="اطلاعات کالا" FontFamily="Tahoma"  TextAlignment="Center" Margin="30,0,0,0" Foreground="Red"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="s22">
+            <TextBlock Text="اطلاعات عملیات تولید/تامین کنندگان" FontFamily="Tahoma"  TextAlignment="Center" Margin="30,0,0,0" Foreground="Red"/> <!--{Binding HeaderOfMadPur,Mode=TwoWay}-->
+        </DataTemplate>
+        <DataTemplate x:Key="s31">
+            <TextBlock Text="تصویر و فیلم کالا" TextAlignment="Center" FontFamily="Tahoma"  Margin="30,0,0,0" Foreground="Red"/>
+        </DataTemplate>
+        <DataTemplate x:Key="s32">
+            <TextBlock Text="اطلاعات موجودی" TextAlignment="Center" Margin="30,0,0,0" FontFamily="Tahoma"  Foreground="Red"/>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid Background="#FFC6D9F1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <telerik:RadRibbonView VerticalAlignment="Top" telerik:StyleManager.Theme="Office_Blue" FlowDirection="RightToLeft" Background="#FFC6D9F1" HeaderBackground="#FFDBEEF4" ApplicationName="مدیریت کالاها" ApplicationButtonImageSource="..\Images\Logo2.png">
+            <telerik:RadRibbonView.TitleBarBackground>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="#FFADC8E5" Offset="1"/>
+                    <GradientStop Color="#FF0F2C4F"/>
+                    <GradientStop Color="#FF5C7898" Offset="1"/>
+                    <GradientStop Color="#FF1C395C" Offset="0.979"/>
+                </LinearGradientBrush>
+            </telerik:RadRibbonView.TitleBarBackground>
+            <telerik:RadRibbonTab Header="امکانات" FontFamily="B Zar" FontSize="12" >
+                <telerik:RadRibbonGroup Header="کالا" Width="Auto" >
+                    <Border  Background="Transparent">
+                        <telerik:RadRibbonButton Text="جدید" LargeImage="..\Images\New.png" Size="Large" FontFamily="B Zar" Command="{Binding CrudClick}" CommandParameter="new" FontSize="13"
+                                                  telerik:ScreenTip.Title="جدید(New)" IsEnabled="{Binding NewDisabling,Mode=OneWay}"
+                                                  telerik:ScreenTip.Description="جهت ساختن کالای جدید بر روی این گیزینه فشار داده و در بخش کالاها اطلاعات را وارد نمایید"  Height="67" VerticalAlignment="Bottom"/>
+                    </Border>
+                    <StackPanel  Background="Transparent" VerticalAlignment="Center">
+                        <RadioButton Content="مستقل" FontFamily="B Zar" IsChecked="{Binding IsIndepend,Mode=TwoWay}" FontSize="13" Width="50"
+                                                  telerik:ScreenTip.Title="مستقل" 
+                                                  telerik:ScreenTip.Description=""   VerticalAlignment="top"/>
+                        <RadioButton Content="جزء" FontFamily="B Zar" FontSize="13" IsChecked="{Binding IsDepend,Mode=OneWay}"  Width="50"
+                                                  telerik:ScreenTip.Title="جزء"
+                                                  telerik:ScreenTip.Description=""   VerticalAlignment="Bottom"/>
+                    </StackPanel>
+                    <telerik:RadRibbonButton Text="جستجو" LargeImage="..\Images\Preview.png"  IsEnabled="{Binding NewDisabling,Mode=OneWay}" Size="Large" FontFamily="B Zar" FontSize="13" Command="{Binding CrudClick}" CommandParameter="search"
+                                                  telerik:ScreenTip.Title="جستجو(Search)" 
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه می‏توانید کالای مورد نظر خود را جستجو نمایید"/>
+                    <telerik:RadRibbonButton Text="ذخیره" LargeImage="..\Images\save.png" Size="Large" FontFamily="B Zar" FontSize="13" Command="{Binding CrudClick}" CommandParameter="save"
+                                                  telerik:ScreenTip.Title="ذخیره" 
+                                                  telerik:ScreenTip.Description=""/><!--IsEnabled="{Binding NewActivated,Mode=TwoWay}"-->
+                    <!--<telerik:RadRibbonSplitButton Text="ذخیره" LargeImage="..\Images\Cut.png" Size="Large" FontFamily="B Zar" FontSize="13"
+                                                  telerik:ScreenTip.Title="ذخیره"
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه میتوانید کالای مورد نظر را برداشته تا در جای دیگر قرار دهید. تا زمانی که قرار نداهید، کالای مورد نظر جا به جا نخواهد شد"/>-->
+                    <telerik:RadRibbonButton Text="انصراف" LargeImage="..\Images\cancel.png" Size="Large" FontFamily="B Zar" FontSize="13" Command="{Binding CrudClick}" CommandParameter="cancel"
+                                                  telerik:ScreenTip.Title="انصراف" IsEnabled="{Binding NewActivated,Mode=TwoWay}"
+                                                  telerik:ScreenTip.Description=""/>
+                    <telerik:RadRibbonButton Text="حذف" LargeImage="..\Images\Remove.png" Size="Large" FontFamily="B Zar" FontSize="13" Command="{Binding CrudClick}" CommandParameter="del"
+                                                  telerik:ScreenTip.Title="حذف(Delete)"  IsEnabled="{Binding NewDisabling,Mode=OneWay}"
+                                                  telerik:ScreenTip.Description="جهت حذف کالای انتخاب شده میتوانید از این گزینه استفاده نمایید"/>
+
+                    <telerik:RadRibbonButton Text="بازیابی مجدد" LargeImage="..\Images\Remove.png" Size="Large" FontFamily="B Zar" FontSize="13" Command="{Binding CrudClick}" CommandParameter="reload"
+                                                  telerik:ScreenTip.Title="بازیابی مجدد(Reload data)"  IsEnabled="{Binding NewDisabling,Mode=OneWay}"
+                                                  telerik:ScreenTip.Description=".برای بازیابی اطلاعات از این گزینه استفاده نمایید"/>
+                </telerik:RadRibbonGroup>
+                <telerik:RadRibbonGroup Header="ساختار کالا" Width="auto" >
+                    <telerik:RadRibbonButton Text="افزودن اجزاء" LargeImage="..\Images\Product.png" Size="Large" FontFamily="B Zar" FontSize="11" Command="{Binding StructureClick}" CommandParameter="add"
+                                                  telerik:ScreenTip.Title="تمام کالاها " IsEnabled="{Binding NewDisabling,Mode=OneWay}"
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه تمامی کالاهای مورد نظر ارزیابی می‏شوند" />
+                    <telerik:RadRibbonButton Text="پنجره انتفال" LargeImage="..\Images\Cart.png" Size="Large" FontFamily="B Zar" FontSize="11" Command="{Binding StructureClick}" CommandParameter="moveWindow"
+                                                  telerik:ScreenTip.Title="کالاهای خریدنی" IsEnabled="{Binding NewDisabling,Mode=OneWay}"
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه تمامی کالاهای خریدنی ارزیابی می‏شوند" />
+                    <StackPanel  Background="Transparent" VerticalAlignment="Center">
+                        <RadioButton Content="فهرست کالا" FontFamily="B Zar" FontSize="12" IsChecked="{Binding TransferFehrest,Mode=TwoWay}" 
+                                                  telerik:ScreenTip.Title="فهرست کالا" IsEnabled="{Binding NewDisabling,Mode=OneWay}"
+                                                  telerik:ScreenTip.Description="حالت لیستی کالاهای تولیدی" />
+                        <RadioButton Content="ساختار کالا" FontFamily="B Zar" FontSize="12" IsChecked="{Binding TransferSakhtar,Mode=OneWay}" 
+                                                  telerik:ScreenTip.Title="ساختار کالا" IsEnabled="{Binding NewDisabling,Mode=OneWay}"
+                                                  telerik:ScreenTip.Description="حالت درختی کالاهای تولیدی" />
+                    </StackPanel>
+                            <telerik:RadRibbonButton Text="برداشتن" LargeImage="..\Images\industry.png" Size="Large" FontFamily="B Zar" FontSize="11" Command="{Binding StructureClick}" CommandParameter="move"
+                                                  telerik:ScreenTip.Title="برداشتن(Cut)" IsEnabled="{Binding NewDisabling,Mode=OneWay}"
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه تمامی کالاهای تولیدی ارزیابی می‏شوند"/>
+                    <telerik:RadRibbonButton Text="رونوشت" LargeImage="..\Images\industry.png" Size="Large" FontFamily="B Zar" FontSize="11" Command="{Binding StructureClick}" CommandParameter="copy"
+                                                  telerik:ScreenTip.Title="رونوشت(Copy)" IsEnabled="{Binding NewDisabling,Mode=OneWay}"
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه تمامی کالاهای تولیدی ارزیابی می‏شوند"/>
+                    <telerik:RadRibbonButton Text="قرار دادن" LargeImage="..\Images\industry.png" Size="Large" FontFamily="B Zar" FontSize="11" Command="{Binding StructureClick}" CommandParameter="paste"
+                                                  telerik:ScreenTip.Title="قرار دادن(Paste)"  IsEnabled="{Binding PasteActive,Mode=TwoWay}"
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه تمامی کالاهای تولیدی ارزیابی می‏شوند"/>
+                </telerik:RadRibbonGroup>
+                <telerik:RadRibbonGroup Header="پنجره" Width="auto">
+                    <StackPanel>
+                        <CheckBox FontFamily="B Zar" FontSize="13" IsChecked="{Binding MaterialStractureShowHide,Mode=TwoWay}">
+                            <StackPanel>
+                                <Image Source="..\Images\ProductStructure.png" >
+                                </Image>
+                                <TextBlock FontFamily="B Zar" FontSize="13" Text="ساختار کالا">
+                                </TextBlock>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <CheckBox FontFamily="B Zar" FontSize="13" IsChecked="{Binding MaterialContainsShowHide,Mode=TwoWay}" >
+                            <StackPanel>
+                                <Image Source="..\Images\ProductParts.png">
+                                </Image>
+                                <TextBlock FontFamily="B Zar" FontSize="13" Text="اجزای کالا">
+                                </TextBlock>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <CheckBox FontFamily="B Zar" FontSize="13" IsChecked="{Binding MaterialInfoShowHide,Mode=TwoWay}">
+                            <StackPanel>
+                                <Image Source="..\Images\ProductInfo.png">
+                                </Image>
+                                <TextBlock FontFamily="B Zar" FontSize="13" Text="اطلاعات کالا">
+                                </TextBlock>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <CheckBox FontFamily="B Zar" FontSize="13" IsChecked="{Binding OperationInfoShowHide,Mode=TwoWay}">
+                            <StackPanel>
+                                <Image Source="..\Images\PrductionInfo.png">
+                                </Image>
+                                <TextBlock FontFamily="B Zar" FontSize="13" Text="اطلاعات عملیات">
+                                </TextBlock>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <CheckBox FontFamily="B Zar" FontSize="13" IsChecked="{Binding ImageAndFilmShowHide,Mode=TwoWay}">
+                            <StackPanel>
+                                <Image Source="..\Images\Image.png">
+                                </Image>
+                                <TextBlock FontFamily="B Zar" FontSize="13" Text="تصویر و فیلم">
+                                </TextBlock>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <CheckBox FontFamily="B Zar" FontSize="13" IsChecked="{Binding EntriesInfoShowHide,Mode=TwoWay}">
+                            <StackPanel>
+                                <Image Source="..\Images\entiesInfo.png">
+                                </Image>
+                                <TextBlock FontFamily="B Zar" FontSize="13" Text="اطلاعات موجودی">
+                                </TextBlock>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <telerik:RadRibbonButton Text="تنظیم پنجره‏ها" Width="50" LargeImage="..\Images\Arrange.png" Command="{Binding ResetAllWindowClick}" Click="ButtonBase_OnClick" Size="Large" FontFamily="B Zar" FontSize="10"
+                                                  telerik:ScreenTip.Title="تنظیم پنجره‏ها"
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه میتوانید پنجره‏ها را به حالت پیشفرض برگردانید" />
+                        <telerik:RadRibbonButton Text="اطلاعات قدیمی" Width="50" LargeImage="..\Images\Arrange.png" Click="ButtonBase_OnClick2" Size="Large" FontFamily="B Zar" FontSize="10"
+                                                  telerik:ScreenTip.Title="تنظیم پنجره‏ها"
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه میتوانید پنجره‏ها را به حالت پیشفرض برگردانید" />
+                    </StackPanel>
+                </telerik:RadRibbonGroup>
+            </telerik:RadRibbonTab>
+        </telerik:RadRibbonView>
+        <Grid Row="1">
+                    <telerik:RadDocking Background="#FFC6D9F1" BorderBrush="DodgerBlue" Name="radDocking">
+                        <telerik:RadSplitContainer Name="FirstCol" InitialPosition="DockedLeft" >
+                            <telerik:RadPaneGroup >
+                                <telerik:RadDocumentPane  TitleTemplate="{StaticResource s11}"  Header="ساختار کالا" Name="StractureMaterial" telerik:RadDocking.SerializationTag="11"  FontFamily="B Zar" FontSize="15" BorderBrush="DodgerBlue">
+                                    <!--IsHidden="{Binding MaterialStractureIsHide,Mode=TwoWay}"-->
+
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="{Binding TreeHeight,Mode=TwoWay}"></RowDefinition>
+                                    <RowDefinition Height="{Binding ListHeight,Mode=TwoWay}"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid>
+                                    <telerik:RadTreeView BorderBrush="DarkBlue" Margin="1" Name="tree" SelectionChanged="treeViewProductStructure_SelectionChanged" ItemsSource="{Binding Groups,Mode=TwoWay}" SelectedItem="{Binding CurrentGroup,Mode=TwoWay}" Background="#FFC6D9F1" IsLineEnabled ="true" IsDragDropEnabled="True" SelectionMode="Single" telerik:StyleManager.Theme="Office_Black">
+                                        <!--<i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="SelectionChanged">
+                                                <i:InvokeCommandAction CommandParameter="{Binding SelectedItem, ElementName=tree}"
+                                                                       Command="{Binding TreeSelectionChanged}" ></i:InvokeCommandAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>-->
+                                        <telerik:RadTreeView.Resources>
+                                            <HierarchicalDataTemplate DataType="{x:Type local:ItemInTree}" ItemsSource="{Binding SubItemInTrees,Mode=TwoWay}">
+                                                <TextBlock Text="{Binding Path=ItemData.title,Mode=TwoWay}" />
+                                            </HierarchicalDataTemplate>
+                                        </telerik:RadTreeView.Resources>
+                                    </telerik:RadTreeView>
+                                </Grid>
+                                <Grid Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="{Binding TransferList,Mode=TwoWay}"></ColumnDefinition>
+                                        <ColumnDefinition Width="{Binding TransferTree,Mode=TwoWay}"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="*"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="جست و جو :" VerticalAlignment="Center"></TextBlock>
+                                        <TextBox Text="{Binding SearchText,Mode=TwoWay}" Name="sasa" Grid.Column="1" Margin="3" >
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="TextChanged">
+                                                    <i:InvokeCommandAction CommandParameter="{Binding Text, ElementName=sasa}"
+                                                                       Command="{Binding SearchTextChanged}" ></i:InvokeCommandAction>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBox>
+                                        <ListBox Grid.Row="1"  Background="#FFC6D9F1" BorderBrush="DodgerBlue" Grid.ColumnSpan="20" Margin="3" ItemsSource="{Binding Items,Mode=TwoWay}" SelectedItem="{Binding CurrentItem,Mode=TwoWay}">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding title,Mode=TwoWay}"></TextBlock>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+
+                                    </Grid>
+
+                                    <Grid Column="1">
+                                        <telerik:RadTreeView Name="tree2" ItemsSource="{Binding Groups2,Mode=TwoWay}" SelectedItem="{Binding CurrentGroup2,Mode=TwoWay}" Background="#FFC6DFF1" IsLineEnabled ="true" IsDragDropEnabled="True" SelectionMode="Single" telerik:StyleManager.Theme="Office_Black" BorderBrush="DarkBlue" Margin="1,5,1,1">
+
+                                            <!--<i:Interaction.Behaviors>
+                                          <beh:EventToCommandBehavior Command="{Binding DropCommand}" Event="Drop" PassArguments="True" />
+                                        </i:Interaction.Behaviors>
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Navigated">-->
+                                            <!--<cmd:EventToCommand Command="{Binding NavigatedEvent}" PassEventArgsToCommand="True" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>-->
+                                            <telerik:RadTreeView.Resources>
+                                                <HierarchicalDataTemplate DataType="{x:Type local:ItemInTree}" ItemsSource="{Binding SubItemInTrees,Mode=TwoWay}">
+                                                    <TextBlock Text="{Binding Path=ItemData.title,Mode=TwoWay}" />
+                                                </HierarchicalDataTemplate>
+                                                <!--<DataTemplate DataType="{x:Type local:Entry}" >
+                    <TextBlock Text="{Binding Path=Name}" />
+                </DataTemplate>-->
+                                            </telerik:RadTreeView.Resources>
+                                        </telerik:RadTreeView>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                                </telerik:RadDocumentPane>
+                            </telerik:RadPaneGroup>
+                            <telerik:RadPaneGroup >
+                                <telerik:RadPane FontFamily="B Zar" TitleTemplate="{StaticResource s12}" FontSize="15" telerik:RadDocking.SerializationTag="12" BorderBrush="DodgerBlue" Name="MaterialContains">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Height="25" Margin="3" Text="{Binding CurrentGroup.ItemData.title,Mode=OneWay}" />
+                                        <ListBox ItemsSource="{Binding CurrentGroup.SubItemInTrees,Mode=OneWay}">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Image}">
+                                                        </TextBlock>
+                                                        <!--<TextBlock Text="">
+                                                </TextBlock>-->
+                                                        <TextBlock Text="{Binding ItemData.title}">
+                                                        </TextBlock>
+                                                        <TextBlock Text=" - ">
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding ItemData.childQuantity}">
+                                                        </TextBlock>
+                                                        <TextBlock Text=" ">
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding ItemData.unit.title}">
+                                                        </TextBlock>
+                                                        <TextBlock Text=" - ">
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding ItemData.childDescription}">
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </StackPanel>
+                                </telerik:RadPane>
+                            </telerik:RadPaneGroup>
+                        </telerik:RadSplitContainer>
+                        <telerik:RadSplitContainer Name="SecondCol" InitialPosition="DockedLeft" Orientation="Vertical" >
+                            <telerik:RadPaneGroup>
+                                <telerik:RadPane TitleTemplate="{StaticResource s21}"  FontFamily="B Zar" FontSize="15" Name="MaterialInfo" BorderBrush="DodgerBlue" telerik:RadDocking.SerializationTag="21">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="35"/>
+                                            <RowDefinition Height="35"/>
+                                            <RowDefinition Height="35"/>
+                                            <RowDefinition Height="35"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Height="35" Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="5"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Column="1" Grid.Row="0" Text="کد" Width="30"/>
+                                            <Border Grid.Column="2" Grid.Row="0" 
+                                        BorderBrush="Black" BorderThickness="1"  >
+                                                <TextBox Text="{Binding CurrentGroup.ItemData.code,Mode=TwoWay}" />
+                                            </Border>
+
+                                        </Grid>
+                                        <Grid Height="35" Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="5"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Column="1" Grid.Row="1" Text="عنوان" Width="30"/>
+                                            <Border Grid.Column="2" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+                                                <TextBox  Text="{Binding CurrentGroup.ItemData.title,Mode=TwoWay}" />
+                                            </Border>
+                                        </Grid>
+                                        <Grid Height="35" Grid.Row="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="85"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="5"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Column="1" Grid.Row="0" Text="واحد اندازه گیری"/>
+                                            <Border Grid.Column="2" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                                                <ComboBox ItemsSource="{Binding MeasuringTypes,Mode=TwoWay}" SelectedItem="{Binding CurrentMeasuringType,Mode=TwoWay}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding title}"></TextBlock>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </Border>
+                                        </Grid>
+                                        <Grid Height="30" Grid.Row="3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="5"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Column="1" Grid.Row="0" Text="نوع"/>
+                                            <Border  Grid.Column="2" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                                                <ComboBox ItemsSource="{Binding ItemTypes,Mode=TwoWay}" SelectedItem="{Binding CurrentItemType,Mode=TwoWay}" >
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Title}"></TextBlock>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                    <!--<ComboBoxItem IsSelected="True">خریدنی</ComboBoxItem>
+                                            <ComboBoxItem>تولیدی</ComboBoxItem>-->
+                                                </ComboBox>
+                                            </Border>
+                                        </Grid>
+                                        <Grid Height="30" Grid.Row="4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="30"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Column="1" Grid.Row="0" Text="شرح"/>
+                                        </Grid>
+                                        <Grid Grid.Row="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="5"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="5"/>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="5"/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+                                                <TextBox  AcceptsReturn="True" TextWrapping="Wrap" HorizontalScrollBarVisibility="Disabled" Text="{Binding CurrentGroup.ItemData.description,Mode=TwoWay}"/>
+                                            </Border>
+                                        </Grid>
+                                    </Grid>
+                                </telerik:RadPane>
+                            </telerik:RadPaneGroup>
+                            <telerik:RadPaneGroup Background="#FFC6D9F1" BorderBrush="DodgerBlue">
+                                <telerik:RadPane   TitleTemplate="{DynamicResource s22}" FontFamily="B Zar" FontSize="15" Name="OperationInfo" telerik:RadDocking.SerializationTag="22" BorderBrush="DodgerBlue">
+
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="{Binding TolidHeight,Mode=TwoWay}"></RowDefinition>
+                                            <RowDefinition Height="{Binding KharidHeight,Mode=TwoWay}"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="35"/>
+                                                <RowDefinition Height="35"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid Height="35" Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="20"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="70"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="20"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Column="1" Grid.Row="0" Text="کد" Width="20"/>
+                                                <Border BorderBrush="Black" BorderThickness="1" Grid.Column="3" Grid.Row="0">
+                                                    <ComboBox ItemsSource="{Binding Suppliers,Mode=TwoWay}" SelectedItem="{Binding CurrentSupplier,Mode=TwoWay}">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding code}"></TextBlock>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                </Border>
+                                                <TextBlock Grid.Column="5" Grid.Row="0" Text="مدت زمان تهیه" Width="70"/>
+                                                <Border BorderBrush="Black" BorderThickness="1" Grid.Column="7" Grid.Row="0">
+                                                    <TextBox Text="{Binding CurrentGroup.ItemData.supplyTime,Mode=TwoWay}"/>
+                                                </Border>
+                                                <TextBlock Grid.Column="9" Grid.Row="0" Text="روز" Width="20"/>
+                                            </Grid>
+                                            <Grid Height="35" Grid.Row="1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="30"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Column="1" Grid.Row="0" Text="عنوان" Width="30"/>
+                                                <Border BorderBrush="Black" BorderThickness="1" Grid.Column="3" Grid.Row="0">
+                                                    <ComboBox ItemsSource="{Binding Suppliers,Mode=TwoWay}" SelectedItem="{Binding CurrentSupplier,Mode=TwoWay}">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <TextBlock Text="{Binding code}"></TextBlock>
+                                                                    <TextBlock Text="-"></TextBlock>
+                                                                    <TextBlock Text="{Binding title}"></TextBlock>
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                </Border>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid Grid.Row="1">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="35"/>
+                                                <RowDefinition Height="35"/>
+                                                <RowDefinition Height="35"/>
+                                                <RowDefinition Height="35"/>
+                                                <RowDefinition Height="35"/>
+                                                <RowDefinition Height="35"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid Height="35" Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="37"/>
+                                                    <ColumnDefinition Width="38"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Column="1" Grid.Row="0" Text="عنوان عملیات" Width="75" Grid.ColumnSpan="2"/>
+                                                <TextBox  BorderBrush="Black" Text="{Binding CurrentGroup.ItemData.operationName,Mode=TwoWay}" BorderThickness="1" Grid.Column="3" Grid.Row="0"/>
+                                            </Grid>
+                                            <Grid Height="35" Grid.Row="1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="75"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Column="1" Grid.Row="1" Text="نوع منبع تولیدی" Width="75"/>
+                                                <ComboBox ItemsSource="{Binding MachineTypes,Mode=TwoWay}" SelectedItem="{Binding CurrentMachineType,Mode=TwoWay}" Grid.Column="2" Grid.Row="1">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <!--<StackPanel Orientation="Horizontal">-->
+                                                            <TextBlock Text="{Binding title}"></TextBlock>
+                                                            <!--<TextBlock Text="-"></TextBlock>
+                                                        <TextBlock Text="{Binding title}"></TextBlock>
+                                                    </StackPanel>-->
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+
+                                            </Grid>
+                                            <Grid Height="35" Grid.Row="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="100"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Column="1" Grid.Row="0" Text="زمان آماده سازی"/>
+                                                <TextBox BorderBrush="Black" Text="{Binding CurrentGroup.ItemData.prepareTime,Mode=TwoWay}" BorderThickness="1" Grid.Column="2" Grid.Row="0"/>
+                                            </Grid>
+                                            <Grid Height="30" Grid.Row="3">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="100"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Column="1" Grid.Row="0" Text="زمان تولید یک واحد"/>
+                                                <TextBox BorderBrush="Black" Text="{Binding CurrentGroup.ItemData.buildUnitTime,Mode=TwoWay}" BorderThickness="1" Grid.Column="2" Grid.Row="0"/>
+                                            </Grid>
+                                            <Grid Height="30" Grid.Row="4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="100"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Column="1" Grid.Row="0" Text="زمان حمل و نقل"/>
+                                                <TextBox BorderBrush="Black" Text="{Binding CurrentGroup.ItemData.shipmentTime,Mode=TwoWay}" BorderThickness="1" Grid.Column="2" Grid.Row="0"/>
+                                            </Grid>
+                                            <Grid Height="30" Grid.Row="5">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="5"/>
+                                                    <ColumnDefinition Width="100"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="5"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Column="1" Grid.Row="0" Text="دسته انتقالی"/>
+                                                <TextBox BorderBrush="Black" Text="{Binding CurrentGroup.ItemData.transmitGroupSize,Mode=TwoWay}" BorderThickness="1" Grid.Column="2" Grid.Row="0"/>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </telerik:RadPane>
+                            </telerik:RadPaneGroup>
+                        </telerik:RadSplitContainer>
+                        <telerik:RadSplitContainer Name="ThirdCol" InitialPosition="DockedLeft" Orientation="Vertical">
+                            <telerik:RadPaneGroup >
+                                <telerik:RadPane  TitleTemplate="{StaticResource s31}" FontFamily="B Zar" Name="ImageAndFilm" FontSize="15" telerik:RadDocking.SerializationTag="31" BorderBrush="DodgerBlue">
+                            <Grid x:Name="LayoutRoot">
+                                <StackPanel>
+                                    <Button x:Name="btnAddImage" Content="افزودن عکس جدید" Visibility="Hidden" Click="Button_Click_2">
+
+                                    </Button>
+                                    <ListBox x:Name="LsImageGallery"  ItemsSource="{Binding}" ItemTemplate="{DynamicResource ImageGalleryDataTemplate}" ItemsPanel="{DynamicResource ImageGalleryItemsPanelTemplate}">
+                                        <ListBox.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                <GradientStop Color="#FFC6D9F1"/>
+                                                <GradientStop Color="#FFC6D9F1" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </ListBox.Background>
+                                    </ListBox>
+                                </StackPanel>
+                            </Grid>
+                        </telerik:RadPane>
+                            </telerik:RadPaneGroup>
+
+                            <telerik:RadPaneGroup >
+                                <telerik:RadPane Name="EntriesInfo"  BorderBrush="DodgerBlue"  TitleTemplate="{StaticResource s32}" FontFamily="B Zar" FontSize="15" telerik:RadDocking.SerializationTag="32" >
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="35"/>
+                                            <RowDefinition Height="35"/>
+                                            <RowDefinition Height="35"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0" Height="30">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="60"/>
+                                                <ColumnDefinition Width="40"/>
+                                                <ColumnDefinition Width="40"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="5"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="1" Text="سفارش دهی"/>
+                                            <RadioButton  Grid.Column="2" GroupName="orderingType" IsChecked="{Binding SizeNot,Mode=OneWay}"  Content="متغیر"/>
+                                            <RadioButton Grid.Column="3" GroupName="orderingType"  Content="ثابت" Name="isFixed" IsChecked="{Binding CurrentGroup.ItemData.size,Mode=TwoWay}" />
+                                            <Border  Grid.Column="4" BorderBrush="Black" BorderThickness="1">
+                                        <TextBox Height="30" VerticalAlignment="Bottom" IsEnabled="{Binding Path=IsChecked,ElementName=isFixed}" Text="{Binding CurrentGroup.ItemData.quentity,Mode=TwoWay}" />
+                                            </Border>
+                                        </Grid>
+                                        <Grid Grid.Row="1" Height="30">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="70"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="90"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="5"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="1" Text="موجودی فعلی"/>
+                                            <Border  BorderBrush="Black" BorderThickness="1"  Grid.Column="2" >
+                                                <TextBox  IsEnabled="false"  Text="{Binding CurrentGroup.ItemData.availableNow,Mode=TwoWay}"/>
+                                            </Border>
+                                            <TextBlock Grid.Column="4" Text="موجودی تخصیصی"/>
+                                            <Border BorderBrush="Black" BorderThickness="1" Grid.Column="5">
+                                                <TextBox   Text="{Binding CurrentGroup.ItemData.assignedQuantity,Mode=TwoWay}"/>
+                                            </Border>
+                                        </Grid>
+                                        <Grid Grid.Row="2" Height="30">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="70"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="90"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="5"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="1" Text="ذخیره احتیاطی"/>
+                                            <Border  BorderBrush="Black" BorderThickness="1" Grid.Column="2">
+                                                <TextBox  IsEnabled="false"  Text="{Binding CurrentGroup.ItemData.emergencyStorage,Mode=TwoWay}"/>
+                                            </Border>
+                                            <TextBlock Grid.Column="4" Text="مقدار ضایعات"/>
+                                            <Border  BorderBrush="Black" BorderThickness="1" Grid.Column="5">
+                                                <TextBox  Text="{Binding CurrentGroup.ItemData.wastedQuantity,Mode=TwoWay}"/>
+                                            </Border>
+                                        </Grid>
+                                    </Grid>
+                                </telerik:RadPane>
+                            </telerik:RadPaneGroup>
+                        </telerik:RadSplitContainer>
+                    </telerik:RadDocking>
+        
+        </Grid>
+
+        <!--<Button Content="save" HorizontalAlignment="Left" Height="28" Margin="139,125,0,0" VerticalAlignment="Top" Width="48" Click="Button_Click"/>
+        <Button Content="load" HorizontalAlignment="Left" Height="28" Margin="89,125,0,0" VerticalAlignment="Top" Width="48" Click="Button_Click_1"/>-->
+    </Grid>
+</Window>

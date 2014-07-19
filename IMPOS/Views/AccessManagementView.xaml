@@ -1,0 +1,571 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        x:Class="IMPOS.Views.AccessManagementView"
+    xmlns:view="clr-namespace:IMPOS.Views"  
+    xmlns:local="clr-namespace:IMPOS.Helpers"  
+    xmlns:conv="clr-namespace:IMPOS.Helpers"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        Title="مدیریت کالاها" FlowDirection="RightToLeft" Initialized="MaterialManagementView_OnInitialized" WindowStartupLocation="CenterScreen" WindowState="Maximized" Width="1400" Height="800" Icon="..\Images\Logo2.png" Loaded="Window_Loaded" Closed="Window_Closed" SizeChanged="Window_SizeChanged">
+    <Window.Resources>
+        <view:MaterialManagementView x:Key="MaterialManagementView"></view:MaterialManagementView>
+        <conv:HiddenToCheckedConverter x:Key="HiddenToCheckedConverter"></conv:HiddenToCheckedConverter>
+        <conv:StatusConverter x:Key="StatusConverter"></conv:StatusConverter>
+        <DataTemplate x:Key="ImageGalleryDataTemplate">
+            <Grid HorizontalAlignment="Center">
+                <Border BorderBrush="#FFFFFF" BorderThickness="3" HorizontalAlignment="Center" Height="120" Width="120"   Padding="10" Margin="5" CornerRadius="10">
+                    <!--Bind Image Path in Image Control-->
+                    <Image Source="{Binding ImagePath}" HorizontalAlignment="Center" Width="120" Stretch="UniformToFill" >
+                        <!--View Large Image on Image Control Tooltip-->
+                        <Image.ToolTip>
+                            <Grid>
+                                <Image Source="{Binding ImagePath}" Stretch="UniformToFill" ></Image>
+                            </Grid>
+                        </Image.ToolTip>
+
+                    </Image>
+                </Border>
+            </Grid>
+        </DataTemplate>
+
+        <ItemsPanelTemplate x:Key="ImageGalleryItemsPanelTemplate">
+
+            <!--Display Images on UniformGrid Panel-->
+            <UniformGrid Columns="4" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+        </ItemsPanelTemplate>
+
+        <Style TargetType="{x:Type telerik:RadPaneGroup}" ><!--BasedOn="{StaticResource {x:Type ScNamespace:MyCustomControl}}"-->
+            <Setter Property="BorderBrush" Value="DodgerBlue"/>
+            <Setter Property="Background" Value="#FFC6D9F1"/>
+        </Style>
+
+
+        <DataTemplate x:Key="s11">
+            <TextBlock Text="بخش های سازمان" FontFamily="Tahoma" TextAlignment="Center" Margin="30,0,0,0" Foreground="Red"/>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="s112">
+            <TextBlock Text="زیرسیستم ها" FontFamily="Tahoma" TextAlignment="Center" Margin="30,0,0,0" Foreground="Red"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="s12">
+            <TextBlock Text="کالاهای خریدنی" FontFamily="Tahoma"  TextAlignment="Center" Margin="30,0,0,0" Foreground="Red"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="s122">
+            <TextBlock Text="کالاهای تولیدی" FontFamily="Tahoma"  TextAlignment="Center" Margin="30,0,0,0" Foreground="Red"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="s21">
+            <TextBlock Text="منابع تولیدی" FontFamily="Tahoma"  TextAlignment="Center" Margin="30,0,0,0" Foreground="Red"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="s22">
+            <TextBlock Text="اطلاعات کارمند" FontFamily="Tahoma"  TextAlignment="Center" Margin="30,0,0,0" Foreground="Red"/> <!--{Binding HeaderOfMadPur,Mode=TwoWay}-->
+        </DataTemplate>
+        <DataTemplate x:Key="s31">
+            <TextBlock Text="کارکنان" TextAlignment="Center" FontFamily="Tahoma"  Margin="30,0,0,0" Foreground="Red"/>
+        </DataTemplate>
+        <DataTemplate x:Key="s32">
+            <TextBlock Text="زیرسیستم های مرتبط" TextAlignment="Center" Margin="30,0,0,0" FontFamily="Tahoma"  Foreground="Red"/>
+        </DataTemplate>
+    </Window.Resources>
+    
+    <Grid Background="#FFC6D9F1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <telerik:RadRibbonView VerticalAlignment="Top" telerik:StyleManager.Theme="Office_Blue" FlowDirection="RightToLeft" Background="#FFC6D9F1" HeaderBackground="#FFDBEEF4" ApplicationName="مدیریت کالاها" ApplicationButtonImageSource="..\Images\Logo2.png">
+            <telerik:RadRibbonView.TitleBarBackground>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="#FFADC8E5" Offset="1"/>
+                    <GradientStop Color="#FF0F2C4F"/>
+                    <GradientStop Color="#FF5C7898" Offset="1"/>
+                    <GradientStop Color="#FF1C395C" Offset="0.979"/>
+                </LinearGradientBrush>
+            </telerik:RadRibbonView.TitleBarBackground>
+            <telerik:RadRibbonTab Header="امکانات" FontFamily="B Zar" FontSize="12" >
+                <telerik:RadRibbonGroup Header="بخش سازمان" Width="Auto" >
+                    <StackPanel>
+                        <!--<Border  Background="Transparent">-->
+                        <telerik:RadRibbonButton Text="جدید" LargeImage="..\Images\add2.png" Size="Medium" FontFamily="B Zar" Command="{Binding CrudClick}" CommandParameter="new" FontSize="13"
+                            telerik:ScreenTip.Title="جدید(New)" IsEnabled="{Binding NewDisabling,Mode=OneWay}"
+                            telerik:ScreenTip.Description="جهت ساختن کالای جدید بر روی این گیزینه فشار داده و در بخش کالاها اطلاعات را وارد نمایید"  Height="33" VerticalAlignment="Bottom"/>
+                        <!--</Border>-->
+                        <!--<telerik:RadRibbonButton Text="جستجو" LargeImage="..\Images\Preview.png"  IsEnabled="{Binding NewDisabling,Mode=OneWay}" Size="Large" FontFamily="B Zar" Height="33"  FontSize="13" Command="{Binding CrudClick}" CommandParameter="search"
+                                                  telerik:ScreenTip.Title="جستجو(Search)" 
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه می‏توانید کالای مورد نظر خود را جستجو نمایید"/>-->
+                        <telerik:RadRibbonButton Text="ذخیره" LargeImage="..\Images\save.png" Size="Medium" Click="ButtonStaffSave_OnClick" FontFamily="B Zar" FontSize="13" Command="{Binding CrudClick}" Height="33"  CommandParameter="save"
+                                telerik:ScreenTip.Title="ذخیره" telerik:ScreenTip.Description=""/>
+                        <!--IsEnabled="{Binding NewActivated,Mode=TwoWay}"   IsEnabled="{Binding SaveEnable,Mode=TwoWay}"-->
+                    </StackPanel>
+                        
+                    <!--<telerik:RadRibbonSplitButton Text="ذخیره" LargeImage="..\Images\Cut.png" Size="Large" FontFamily="B Zar" FontSize="13"
+                                                  telerik:ScreenTip.Title="ذخیره"
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه میتوانید کالای مورد نظر را برداشته تا در جای دیگر قرار دهید. تا زمانی که قرار نداهید، کالای مورد نظر جا به جا نخواهد شد"/>-->
+                    <StackPanel>
+                        <telerik:RadRibbonButton Text="انصراف" LargeImage="..\Images\cancel.png" Size="Medium" FontFamily="B Zar" FontSize="13" Command="{Binding CrudClick}" Height="33"  CommandParameter="cancel"
+                                                  telerik:ScreenTip.Title="انصراف" IsEnabled="{Binding CancelEnable,Mode=TwoWay}" telerik:ScreenTip.Description=""/>
+                        <telerik:RadRibbonButton Text="حذف" LargeImage="..\Images\Remove.png" Size="Medium" FontFamily="B Zar" FontSize="13" Command="{Binding CrudClick}" Height="33"  CommandParameter="del"
+                                                  telerik:ScreenTip.Title="حذف(Delete)"  IsEnabled="{Binding DeleteEnable,Mode=OneWay}" telerik:ScreenTip.Description="جهت حذف کالای انتخاب شده میتوانید از این گزینه استفاده نمایید"/>
+                    </StackPanel>
+                    
+                    <!--<telerik:RadRibbonButton Text="بازیابی مجدد" LargeImage="..\Images\Remove.png" Size="Large" FontFamily="B Zar" FontSize="13" Command="{Binding CrudClick}" Height="33"  CommandParameter="reload"
+                         telerik:ScreenTip.Title="بازیابی مجدد(Reload data)"  IsEnabled="{Binding NewDisabling,Mode=OneWay}" telerik:ScreenTip.Description=".برای بازیابی اطلاعات از این گزینه استفاده نمایید"/>-->
+                </telerik:RadRibbonGroup>
+                <telerik:RadRibbonGroup Header="پنجره" Width="auto">
+                    <StackPanel>
+                        <CheckBox FontFamily="B Zar" FontSize="13" Click="Cheked_OnClick" Name="MaterialStractureShowHide" >
+                            <StackPanel>
+                                <Image Source="..\Images\ProductStructure.png" >
+                                </Image>
+                                <TextBlock FontFamily="B Zar" FontSize="13" Text="زیرسیستم ها">
+                                </TextBlock>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <CheckBox FontFamily="B Zar" FontSize="13" Click="Cheked_OnClick" Name="MaterialContainsShowHide"  >
+                            <StackPanel>
+                                <Image Source="..\Images\ProductParts.png">
+                                </Image>
+                                <TextBlock FontFamily="B Zar" FontSize="13" Text="کالاهای خریدنی">
+                                </TextBlock>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <CheckBox FontFamily="B Zar" FontSize="13" Click="Cheked_OnClick" Name="MaterialFathersShowHide" >
+                            <StackPanel>
+                                <Image Source="..\Images\ProductParts.png">
+                                </Image>
+                                <TextBlock FontFamily="B Zar" FontSize="13" Text="کالاهای تولیدی">
+                                </TextBlock>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <CheckBox FontFamily="B Zar" FontSize="13" Click="Cheked_OnClick" Name="MaterialInfoShowHide" >
+                            <StackPanel>
+                                <Image Source="..\Images\ProductInfo.png">
+                                </Image>
+                                <TextBlock FontFamily="B Zar" FontSize="13" Text="منابع تولیدی">
+                                </TextBlock>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                    </telerik:RadRibbonGroup>
+
+                <telerik:RadRibbonGroup Header="کارکنان" Width="auto">
+                    <StackPanel>
+                        <CheckBox FontFamily="B Zar" FontSize="13" Click="Cheked_OnClick" Name="OperationInfoShowHide" >
+                            <StackPanel>
+                                <Image Source="..\Images\PrductionInfo.png">
+                                </Image>
+                                <TextBlock FontFamily="B Zar" FontSize="13" Text="کارکنان">
+                                </TextBlock>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                    <StackPanel>
+                        <!--<Border  Background="Transparent">-->
+                        <telerik:RadRibbonButton Text="جدید" LargeImage="..\Images\add2.png" Size="Medium" FontFamily="B Zar" Command="{Binding CrudEmployeeClick}" CommandParameter="new" FontSize="13"
+                            telerik:ScreenTip.Title="جدید(New)" IsEnabled="{Binding NewDisabling,Mode=OneWay}"
+                            telerik:ScreenTip.Description="جهت ساختن کالای جدید بر روی این گیزینه فشار داده و در بخش کالاها اطلاعات را وارد نمایید"  Height="33" VerticalAlignment="Bottom"/>
+                        <!--</Border>-->
+                        <!--<telerik:RadRibbonButton Text="جستجو" LargeImage="..\Images\Preview.png"  IsEnabled="{Binding NewDisabling,Mode=OneWay}" Size="Large" FontFamily="B Zar" Height="33"  FontSize="13" Command="{Binding CrudClick}" CommandParameter="search"
+                                                  telerik:ScreenTip.Title="جستجو(Search)" 
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه می‏توانید کالای مورد نظر خود را جستجو نمایید"/>-->
+                        <telerik:RadRibbonButton Click="ButtonStaffSave_OnClick"  Text="ذخیره" LargeImage="..\Images\save.png" Size="Medium" FontFamily="B Zar" FontSize="13" Command="{Binding CrudEmployeeClick}" Height="33"  CommandParameter="save"
+                                telerik:ScreenTip.Title="ذخیره" telerik:ScreenTip.Description=""/>
+                        <!--IsEnabled="{Binding NewActivated,Mode=TwoWay}"-->
+                    </StackPanel>
+
+                    <!--<telerik:RadRibbonSplitButton Text="ذخیره" LargeImage="..\Images\Cut.png" Size="Large" FontFamily="B Zar" FontSize="13"
+                                                  telerik:ScreenTip.Title="ذخیره"
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه میتوانید کالای مورد نظر را برداشته تا در جای دیگر قرار دهید. تا زمانی که قرار نداهید، کالای مورد نظر جا به جا نخواهد شد"/>-->
+                    <StackPanel>
+                        <telerik:RadRibbonButton Text="انصراف" LargeImage="..\Images\cancel.png" Size="Medium" FontFamily="B Zar" FontSize="13" Command="{Binding CrudEmployeeClick}" Height="33"  CommandParameter="cancel"
+                                                  telerik:ScreenTip.Title="انصراف" IsEnabled="{Binding CancelEmployeeEnable,Mode=TwoWay}" telerik:ScreenTip.Description=""/>
+                        <telerik:RadRibbonButton Text="حذف" LargeImage="..\Images\Remove.png" Size="Medium" FontFamily="B Zar" FontSize="13" Command="{Binding CrudEmployeeClick}" Height="33"  CommandParameter="del"
+                                                  telerik:ScreenTip.Title="حذف(Delete)"  IsEnabled="{Binding DeleteEmployeeEnable,Mode=OneWay}" telerik:ScreenTip.Description="جهت حذف کالای انتخاب شده میتوانید از این گزینه استفاده نمایید"/>
+                    </StackPanel>
+                    </telerik:RadRibbonGroup>
+
+                <telerik:RadRibbonGroup Header="تنظیمات" Width="auto">
+                    <StackPanel Orientation="Horizontal">
+                        <telerik:RadRibbonButton Text="تنظیم پنجره‏ها" Width="50" LargeImage="..\Images\Arrange.png" Click="ButtonBase_OnClick" Size="Large" FontFamily="B Zar" FontSize="10"
+                                                  telerik:ScreenTip.Title="تنظیم پنجره‏ها"
+                                                  telerik:ScreenTip.Description="با استفاده از این گزینه میتوانید پنجره‏ها را به حالت پیشفرض برگردانید" />
+                     </StackPanel>
+                </telerik:RadRibbonGroup>
+            </telerik:RadRibbonTab>
+        </telerik:RadRibbonView>
+        <Grid Row="1">
+            <telerik:RadDocking Close="RadDocking_OnClose" Background="#FFC6D9F1" BorderBrush="DodgerBlue" Name="radDocking">
+                <telerik:RadSplitContainer Name="FirstCol"  InitialPosition="DockedLeft" Orientation="Vertical" >
+                    <telerik:RadPaneGroup >
+                        <telerik:RadDocumentPane CanUserClose="False" TitleTemplate="{StaticResource s11}"  Header="بخش های سازمان" Name="StractureMaterial" telerik:RadDocking.SerializationTag="11"  FontFamily="B Zar" FontSize="15"  Background="#FFC6D9F1" BorderBrush="DodgerBlue" CanFloat="False" CanDockInDocumentHost="False">
+                                    <!--IsHidden="{Binding MaterialStractureIsHide,Mode=TwoWay}"-->
+
+                            <Grid>
+                                <Grid>
+                                    <ListBox Name="OrgList" ItemsSource="{Binding Organizations,Mode=TwoWay}" SelectedItem="{Binding CurrentOrganization,Mode=TwoWay}" Background="#FFC6D9F1" BorderBrush="DodgerBlue">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding title}"></TextBlock>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
+                            </Grid>
+                        </telerik:RadDocumentPane>
+                    </telerik:RadPaneGroup>
+                    <telerik:RadPaneGroup >
+                        <telerik:RadDocumentPane  TitleTemplate="{StaticResource s112}"  Header="زیرسیستم ها" Name="MoveWindow" telerik:RadDocking.SerializationTag="121"  FontFamily="B Zar" FontSize="15"  Background="#FFC6D9F1" BorderBrush="DodgerBlue" CanUserPin="False">
+                            <DataGrid Background="#FFC6D9F1" AutoGenerateColumns="False" BorderBrush="DodgerBlue" ItemsSource="{Binding CurrentOrganization.allSubSystemStatuses,Mode=TwoWay}" SelectedItem="{Binding CurrentSubSystemStatus,Mode=TwoWay}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding subSystem.title}" Header="عنوان"/>
+                                    <DataGridCheckBoxColumn Binding="{Binding status,Mode=TwoWay}" Header="وضعیت">
+
+                                        <DataGridCheckBoxColumn.CellStyle>
+                                            <Style TargetType="{x:Type DataGridCell}">
+                                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown"></EventSetter>
+                                            </Style>
+                                        </DataGridCheckBoxColumn.CellStyle>
+
+                                    </DataGridCheckBoxColumn>
+                                    <!--<DataGridTemplateColumn Header="وضعیت">
+                                        <DataGridTemplateColumn.CellEditingTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <CheckBox IsChecked="{Binding status,Mode=TwoWay}"></CheckBox>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellEditingTemplate>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <CheckBox IsChecked="{Binding sadasd,Mode=TwoWay}"></CheckBox>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>-->
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </telerik:RadDocumentPane>
+                    </telerik:RadPaneGroup>
+                </telerik:RadSplitContainer>
+                <telerik:RadSplitContainer Name="FirstOtherCol" InitialPosition="DockedLeft" Orientation="Vertical">
+                    <telerik:RadPaneGroup >
+                        <telerik:RadPane Background="#FFC6D9F1" BorderBrush="DodgerBlue" FontFamily="B Zar" TitleTemplate="{StaticResource s12}" Header="کالاهای خریدنی" FontSize="15" telerik:RadDocking.SerializationTag="12"  Name="MaterialContains">
+                            <Grid>
+                                <!--<Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>-->
+                                <TextBox Width="0" Name="txtFockus"></TextBox>
+                                <DataGrid AutoGenerateColumns="False" Background="#FFC6D9F1" CurrentCellChanged="DataGrid_OnCurrentCellChanged" Name="purchaseGrid" BorderBrush="DodgerBlue" ItemsSource="{Binding CurrentOrganization.allPurchasedProductStatuses,Mode=TwoWay}" SelectedItem="{Binding CurrentPurchasedProductStatus,Mode=TwoWay}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding item.title}" Header="عنوان کالا" Width="150">
+                                            <DataGridTextColumn.CellStyle>
+                                                <Style TargetType="{x:Type DataGridCell}">
+                                                    <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                                                </Style>
+                                            </DataGridTextColumn.CellStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridCheckBoxColumn Header="غیرمرتبط" Binding="{Binding status,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource StatusConverter},ConverterParameter=gm}">
+
+                                            <DataGridCheckBoxColumn.CellStyle>
+                                                <Style TargetType="{x:Type DataGridCell}">
+                                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown"></EventSetter>
+                                                </Style>
+                                            </DataGridCheckBoxColumn.CellStyle>
+                                        </DataGridCheckBoxColumn>
+                                        <DataGridCheckBoxColumn Header="رویت" Binding="{Binding status,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource StatusConverter},ConverterParameter=ro}">
+
+                                            <DataGridCheckBoxColumn.CellStyle>
+                                                <Style TargetType="{x:Type DataGridCell}">
+                                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown"></EventSetter>
+                                                </Style>
+                                            </DataGridCheckBoxColumn.CellStyle>
+
+                                        </DataGridCheckBoxColumn>
+                                        <DataGridCheckBoxColumn Header="تغییر" Binding="{Binding status,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource StatusConverter},ConverterParameter=e}">
+
+                                            <DataGridCheckBoxColumn.CellStyle>
+                                                <Style TargetType="{x:Type DataGridCell}">
+                                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown"></EventSetter>
+                                                </Style>
+                                            </DataGridCheckBoxColumn.CellStyle>
+
+                                        </DataGridCheckBoxColumn>
+
+                                        <!--<DataGridCheckBoxColumn Header="غیرمرتبط" Binding="{Binding statusZero,Mode=TwoWay}"></DataGridCheckBoxColumn>
+                                        <DataGridCheckBoxColumn Header="رویت" Binding="{Binding statusOne,Mode=TwoWay}"></DataGridCheckBoxColumn>
+                                        <DataGridCheckBoxColumn Header="تغییر" Binding="{Binding statusTwo,Mode=TwoWay}"></DataGridCheckBoxColumn>-->
+                                        <!--<DataGridTemplateColumn Header="غیرمرتبط">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <RadioButton Content="sadasd" IsChecked="{Binding status,Mode=TwoWay,Converter={StaticResource StatusConverter},ConverterParameter=gm}"></RadioButton>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <RadioButton Content="sadasd" IsChecked="{Binding status,Mode=TwoWay,Converter={StaticResource StatusConverter},ConverterParameter=gm}"></RadioButton>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="رویت">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <RadioButton Content="sadasd" IsChecked="{Binding status,Mode=TwoWay,Converter={StaticResource StatusConverter},ConverterParameter=ro}"></RadioButton>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <RadioButton Content="sadasd" IsChecked="{Binding status,Mode=TwoWay,Converter={StaticResource StatusConverter},ConverterParameter=ro}"></RadioButton>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="تغییر">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <RadioButton Content="sadasd" IsChecked="{Binding status,Mode=TwoWay,Converter={StaticResource StatusConverter},ConverterParameter=e}"></RadioButton>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <RadioButton Content="sadasd" IsChecked="{Binding status,Mode=TwoWay,Converter={StaticResource StatusConverter},ConverterParameter=e}"></RadioButton>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                        </DataGridTemplateColumn>-->
+                                        
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </telerik:RadPane>
+                    </telerik:RadPaneGroup>
+                    <telerik:RadPaneGroup >
+                        <telerik:RadPane FontFamily="B Zar" Background="#FFC6D9F1" BorderBrush="DodgerBlue" Name="MaterialFathers" TitleTemplate="{StaticResource s122}" Header="کالاهای تولیدی" FontSize="15" telerik:RadDocking.SerializationTag="122" >
+                            <Grid>
+                                <DataGrid  AutoGenerateColumns="False" Background="#FFC6D9F1" BorderBrush="DodgerBlue" ItemsSource="{Binding CurrentOrganization.allMadeProductStatuses,Mode=TwoWay}" SelectedItem="{Binding CurrentMadeProductStatus,Mode=TwoWay}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding item.title}" Header="عنوان کالا" Width="150" >
+                                            <DataGridTextColumn.CellStyle>
+                                                <Style TargetType="{x:Type DataGridCell}">
+                                                    <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                                                </Style>
+                                            </DataGridTextColumn.CellStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridCheckBoxColumn Header="غیرمرتبط" Binding="{Binding status,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource StatusConverter},ConverterParameter=gm,Mode=TwoWay}">
+
+                                            <DataGridCheckBoxColumn.CellStyle>
+                                                <Style TargetType="{x:Type DataGridCell}">
+                                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown"></EventSetter>
+                                                </Style>
+                                            </DataGridCheckBoxColumn.CellStyle>
+
+                                        </DataGridCheckBoxColumn>
+                                        <DataGridCheckBoxColumn Header="رویت" Binding="{Binding status,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource StatusConverter},ConverterParameter=ro,Mode=TwoWay}">
+
+                                            <DataGridCheckBoxColumn.CellStyle>
+                                                <Style TargetType="{x:Type DataGridCell}">
+                                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown"></EventSetter>
+                                                </Style>
+                                            </DataGridCheckBoxColumn.CellStyle>
+
+                                        </DataGridCheckBoxColumn>
+                                        <DataGridCheckBoxColumn Header="تغییر" Binding="{Binding status,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource StatusConverter},ConverterParameter=e,Mode=TwoWay}">
+
+                                            <DataGridCheckBoxColumn.CellStyle>
+                                                <Style TargetType="{x:Type DataGridCell}">
+                                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown"></EventSetter>
+                                                </Style>
+                                            </DataGridCheckBoxColumn.CellStyle>
+
+                                        </DataGridCheckBoxColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </telerik:RadPane>
+                    </telerik:RadPaneGroup>
+                </telerik:RadSplitContainer>
+                <telerik:RadSplitContainer Name="SecondCol" InitialPosition="DockedLeft" Orientation="Vertical" >
+                    <!--<telerik:RadPaneGroup>-->
+                        <telerik:RadSplitContainer InitialPosition="DockedLeft" Orientation="Horizontal" >
+                            <telerik:RadPaneGroup>
+                            <telerik:RadPane TitleTemplate="{StaticResource s21}" Header="منابع تولیدی"  FontFamily="B Zar" FontSize="15" Name="MaterialInfo" BorderBrush="DodgerBlue" telerik:RadDocking.SerializationTag="21">
+                        <Grid>
+                            <!--<Grid.RowDefinitions>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Height="35" Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="5"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                </Grid.RowDefinitions>-->
+                                    <DataGrid  AutoGenerateColumns="False" ItemsSource="{Binding CurrentOrganization.allResourceTypeStatuses,Mode=TwoWay}" SelectedItem="{Binding CurrentResourceTypeStatus,Mode=TwoWay}" Background="#FFC6D9F1" BorderBrush="DodgerBlue">
+                                    <DataGrid.Columns>
+                                            <DataGridTextColumn Binding="{Binding machineType.title,Mode=TwoWay}" Header="عنوان"/>
+                                            <DataGridCheckBoxColumn Binding="{Binding status,Mode=TwoWay}" Header="وضعیت">
+
+                                                <DataGridCheckBoxColumn.CellStyle>
+                                                    <Style TargetType="{x:Type DataGridCell}">
+                                                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown"></EventSetter>
+                                                    </Style>
+                                                </DataGridCheckBoxColumn.CellStyle>
+
+                                            </DataGridCheckBoxColumn>
+                                        <!--<DataGridTemplateColumn Header="وضعیت">
+                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel>
+                                                        <CheckBox IsChecked="{Binding sadasd,Mode=TwoWay}"></CheckBox>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel>
+                                                        <CheckBox IsChecked="{Binding sadasd,Mode=TwoWay}"></CheckBox>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>-->
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                        </Grid>
+                    </telerik:RadPane>
+
+                            </telerik:RadPaneGroup>
+                            <telerik:RadSplitContainer InitialPosition="DockedLeft" Orientation="Vertical">
+                                <telerik:RadPaneGroup>
+                                    <telerik:RadPane  TitleTemplate="{StaticResource s31}" Header="کارکنان" FontFamily="B Zar" Name="ImageAndFilm2" FontSize="15" telerik:RadDocking.SerializationTag="31" BorderBrush="DodgerBlue">
+                                        <!--IsHidden="{Binding Path=IsChecked,ElementName=ImageAndFilmShowHide,Converter={StaticResource HiddenToCheckedConverter}}"-->
+                                    <Grid Row="1">
+                                        <DataGrid Name="StaffList" AutoGenerateColumns="False" Background="#FFC6D9F1" BorderBrush="DodgerBlue"  ItemsSource="{Binding CurrentOrganization.allStaff,Mode=TwoWay}" SelectedItem="{Binding CurrentStaff,Mode=TwoWay}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="کد کارمند" Binding="{Binding code,Mode=TwoWay}" Width="125"></DataGridTextColumn>
+                                                <DataGridTextColumn Header="نام کارمند" Binding="{Binding name,Mode=TwoWay}" Width="125"></DataGridTextColumn>
+                                                <DataGridTextColumn Header="سمت" Binding="{Binding job,Mode=TwoWay}" Width="125"></DataGridTextColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Grid>
+                                    </telerik:RadPane>
+                                </telerik:RadPaneGroup>
+                                <telerik:RadPaneGroup>
+                                    <telerik:RadPane  TitleTemplate="{StaticResource s32}" Header="زیرسیستم های مرتبط" FontFamily="B Zar" Name="ImageAndFilm" FontSize="15" telerik:RadDocking.SerializationTag="325" BorderBrush="DodgerBlue">
+                                        <!--IsHidden="{Binding Path=IsChecked,ElementName=ImageAndFilmShowHide,Converter={StaticResource HiddenToCheckedConverter}}"-->
+                                    <DataGrid  AutoGenerateColumns="False" Name="StaffSubList" ItemsSource="{Binding CurrentStaff.allSubSystemStatuses,Mode=TwoWay}"  Background="#FFC6D9F1" BorderBrush="DodgerBlue" SelectedItem="{Binding sadsad,Mode=TwoWay}">
+                                            <DataGrid.Columns>
+                                            <DataGridTextColumn Header="عنوان" Binding="{Binding subSystem.title,Mode=OneWay}" Width="200"></DataGridTextColumn>
+                                            <DataGridCheckBoxColumn Header="وضعیت" Binding="{Binding status,Mode=TwoWay}">
+                                                <DataGridCheckBoxColumn.CellStyle>
+                                                    <Style TargetType="{x:Type DataGridCell}">
+                                                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown"></EventSetter>
+                                                    </Style>
+                                                </DataGridCheckBoxColumn.CellStyle>
+                                            </DataGridCheckBoxColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </telerik:RadPane>
+                                </telerik:RadPaneGroup>
+                            </telerik:RadSplitContainer>
+
+                        </telerik:RadSplitContainer>
+                    <!--</telerik:RadPaneGroup>-->
+                    <telerik:RadPaneGroup Background="#FFC6D9F1" BorderBrush="DodgerBlue">
+                    <telerik:RadPane  TitleTemplate="{DynamicResource s22}" Header="اطلاعات کارمند" FontFamily="B Zar" FontSize="15" Name="OperationInfo" telerik:RadDocking.SerializationTag="22" BorderBrush="DodgerBlue">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="1" Text="کد :" Width="75"/>
+                                    <TextBox BorderBrush="Black" Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding CurrentStaff.code,Mode=TwoWay}"></TextBox>
+                                    <!--<ComboBox ItemsSource="{Binding MachineTypes,Mode=TwoWay}" Margin="3" SelectedItem="{Binding CurrentMachineType,Mode=TwoWay}" Grid.Row="1" Grid.Column="1">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>-->
+                                    <!--<StackPanel Orientation="Horizontal">-->
+                                    <!--<TextBlock Text="{Binding title}"></TextBlock>-->
+                                    <!--<TextBlock Text="-"></TextBlock>
+                                            <TextBlock Text="{Binding title}"></TextBlock>
+                                        </StackPanel>-->
+                                    <!--</DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>-->
+
+                                    <TextBlock Grid.Row="2" Text="نام و نام خانوادگی :"/>
+                                    <TextBox BorderBrush="Black" Margin="3" Grid.Row="2" Text="{Binding CurrentStaff.name,Mode=TwoWay}" BorderThickness="1" Grid.Column="1" />
+                                    <TextBlock  Grid.Row="3" Text="سمت"/>
+                                    <TextBox BorderBrush="Black" Margin="3" Text="{Binding CurrentStaff.job,Mode=TwoWay}" BorderThickness="1" Grid.Column="1" Grid.Row="3"/>
+                                    <TextBlock Grid.Row="4" Margin="3" Text="شماره تماس :"/>
+                                    <TextBox BorderBrush="Black" Margin="3" Text="{Binding CurrentStaff.tel,Mode=TwoWay}" BorderThickness="1" Grid.Column="1" Grid.Row="4"/>
+                                    <TextBlock Grid.Row="5" Text="نشانی :"/>
+                                    <TextBox BorderBrush="Black" Margin="3" Text="{Binding CurrentStaff.address,Mode=TwoWay}" BorderThickness="1" Grid.ColumnSpan="2" Grid.Row="6"/>
+                                    <TextBlock Grid.Row="7" Text="ملاحظات :"/>
+                                    <TextBox BorderBrush="Black" Margin="3" Text="{Binding CurrentStaff.description,Mode=TwoWay}" BorderThickness="1" Grid.ColumnSpan="2" Grid.Row="8"/>
+                                    <TextBlock Grid.Row="9" Text="شناسه کاربری :"/>
+                                    <TextBox BorderBrush="Black" Margin="3" Text="{Binding CurrentStaff.username,Mode=TwoWay}" BorderThickness="1" Grid.Column="1" Grid.Row="9"/>
+                                    <TextBlock Grid.Row="10" Text="رمز عبور :"/>
+                                    <PasswordBox BorderBrush="Black" KeyUp="PasswordBox_OnKeyUp" Margin="3" Name="PasswordBox"  BorderThickness="1" Grid.Column="1" Grid.Row="10"/>
+                                    <TextBlock Grid.Row="11" Text="تکرار رمز عبور :"/>
+                                    <PasswordBox BorderBrush="Black" KeyUp="PasswordBox_OnKeyUp" Margin="3" Name="PasswordBoxrpt" BorderThickness="1" Grid.Column="1" Grid.Row="11"/>
+                                </Grid>
+                            </ScrollViewer>    
+                     
+                    </telerik:RadPane>
+                    </telerik:RadPaneGroup>
+                </telerik:RadSplitContainer>
+            </telerik:RadDocking>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,9 @@
+﻿<Application x:Class="IMPOS.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="Views/MaterialManagementView.xaml">
+    <!-- Views/TestPage.xaml MainWindow.xaml Views/UserControlTest.xaml Views/MaterialManagementView.xaml"-->
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>
