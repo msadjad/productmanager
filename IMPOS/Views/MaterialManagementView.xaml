@@ -127,7 +127,7 @@
                                                   telerik:ScreenTip.Title="جستجو(Search)"  Click="ButtonSearch_OnClick"
                                                   telerik:ScreenTip.Description="با استفاده از این گزینه می‏توانید کالای مورد نظر خود را جستجو نمایید"/>
                     <telerik:RadRibbonButton Text="ذخیره" LargeImage="..\Images\save.png" Size="Large" FontFamily="B Zar" FontSize="13" Command="{Binding CrudClick}" CommandParameter="save"
-                                                  telerik:ScreenTip.Title="ذخیره" Click="ButtonBase_SaveClick"
+                                                  telerik:ScreenTip.Title="ذخیره" Click="ButtonBase_SaveClick" IsEnabled="False" Name="saveItem"
                                                   telerik:ScreenTip.Description=""/><!--IsEnabled="{Binding NewActivated,Mode=TwoWay}"-->
                     <!--<telerik:RadRibbonSplitButton Text="ذخیره" LargeImage="..\Images\Cut.png" Size="Large" FontFamily="B Zar" FontSize="13"
                                                   telerik:ScreenTip.Title="ذخیره"
@@ -142,7 +142,7 @@
                     <telerik:RadRibbonButton Text="بازیابی مجدد" LargeImage="..\Images\Remove.png" Size="Large" FontFamily="B Zar" FontSize="12" Command="{Binding CrudClick}" CommandParameter="reload"
                     telerik:ScreenTip.Title="بازیابی مجدد(Reload data)"  IsEnabled="{Binding NewDisabling,Mode=OneWay}" telerik:ScreenTip.Description=".برای بازیابی اطلاعات از این گزینه استفاده نمایید"/>
                 </telerik:RadRibbonGroup>
-                <telerik:RadRibbonGroup Header="ساختار کالا" Width="auto" >
+                <telerik:RadRibbonGroup Header="ساختار کالا" Width="auto">
                     <telerik:RadRibbonButton Text="افزودن اجزاء" LargeImage="..\Images\Product.png" Size="Large" FontFamily="B Zar" FontSize="11" Command="{Binding StructureClick}" CommandParameter="add"
                                                   telerik:ScreenTip.Title="تمام کالاها " IsEnabled="{Binding NewDisabling,Mode=OneWay}"
                                                   telerik:ScreenTip.Description="با استفاده از این گزینه تمامی کالاهای مورد نظر ارزیابی می‏شوند" />
@@ -259,7 +259,7 @@
 
                             <Grid>
                                 <Grid>
-                                    <telerik:RadTreeView  BorderBrush="DarkBlue" Margin="1" Name="tree" TabIndex="0" SelectionChanged="treeViewProductStructure_SelectionChanged" AllowDrop="False" IsDropPreviewLineEnabled="False" ItemsSource="{Binding Groups,Mode=TwoWay}" SelectedItem="{Binding CurrentGroup,Mode=TwoWay}" Background="#FFC6D9F1" IsLineEnabled ="true" PreviewDrop="Tree_OnDrop" IsDragDropEnabled="True" SelectionMode="Single" telerik:StyleManager.Theme="Office_Black">
+                                    <telerik:RadTreeView BorderBrush="DarkBlue" Margin="1" Name="tree" TabIndex="0" SelectionChanged="treeViewProductStructure_SelectionChanged" AllowDrop="False" IsDropPreviewLineEnabled="False" ItemsSource="{Binding Groups,Mode=TwoWay}" SelectedItem="{Binding CurrentGroup,Mode=TwoWay}" Background="#FFC6D9F1" IsLineEnabled ="true" PreviewDrop="Tree_OnDrop" IsDragDropEnabled="True" SelectionMode="Single" telerik:StyleManager.Theme="Office_Black">
                                         <!--<i:Interaction.Triggers>
                                             <i:EventTrigger EventName="SelectionChanged">
                                                 <i:InvokeCommandAction CommandParameter="{Binding SelectedItem, ElementName=tree}"
@@ -570,7 +570,7 @@
                                 <TextBlock Grid.Column="1" Grid.Row="0" Text="کد" Width="30"/>
                                 <Border Grid.Column="2" Grid.Row="0" 
                             BorderBrush="Black" BorderThickness="1"  >
-                                        <TextBox TabIndex="1" Text="{Binding CurrentGroup.ItemData.code,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushCode,Mode=TwoWay}" TextChanged="TextBox_OnTextChanged" GotFocus="TextBox_OnLostFocus"   />
+                                        <TextBox Name="itemCode" MaxLength="20" TabIndex="1" Text="{Binding CurrentGroup.ItemData.code,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushCode,Mode=TwoWay}" PreviewLostKeyboardFocus="itemCode_PreviewLostKeyboardFocus" />
                                 </Border>
 
                             </Grid>
@@ -586,7 +586,7 @@
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Column="1" Grid.Row="1" Text="عنوان" Width="30"/>
                                 <Border Grid.Column="2" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
-                                        <TextBox TabIndex="2" Text="{Binding CurrentGroup.ItemData.title,Mode=TwoWay}"  Background="{Binding CurrentBackColorOfData.BrushTitle,Mode=TwoWay}" TextChanged="TextBox_OnTextChanged" GotFocus="TextBox_OnLostFocus"    />
+                                        <TextBox TabIndex="2" Name="itemTitle" Text="{Binding CurrentGroup.ItemData.title,Mode=TwoWay}"  MaxLength="50" Background="{Binding CurrentBackColorOfData.BrushTitle,Mode=TwoWay}" PreviewLostKeyboardFocus="itemTitle_PreviewLostKeyboardFocus"  />
                                 </Border>
                             </Grid>
                             <Grid Height="35" Grid.Row="2">

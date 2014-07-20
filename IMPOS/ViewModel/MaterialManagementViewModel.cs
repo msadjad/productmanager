@@ -218,7 +218,7 @@ namespace IMPOS.ViewModel
             get { return _newActivated; }
         }
 
-        public bool _cancleActivated;
+        public bool _cancleActivated = false;
         public bool CancleActivated
         {
             set { _cancleActivated = value; OnPropertyChanged(); OnPropertyChanged("NewDisabling"); }

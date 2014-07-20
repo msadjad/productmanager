@@ -720,18 +720,85 @@ namespace IMPOS.Views
             }
         }
 
+        /*check for sample
+         * private void hourCheck_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int iValue = -1;
 
-        private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+            if (Int32.TryParse(textBox.Text, out iValue) == false || (iValue < 0 || iValue > 23))
+            {
+                TextChange textChange = e.Changes.ElementAt<TextChange>(0);
+                int iAddedLength = textChange.AddedLength;
+                int iOffset = textChange.Offset;
+
+                textBox.Text = textBox.Text.Remove(iOffset, iAddedLength);
+                textBox.CaretIndex = iOffset;
+            }
+        }
+         */
+
+        private void itemCode_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             try
             {
-                _materialManagementViewModel.ChangeForCanceling();
+                if (tree.SelectedItem != null && ((ItemInTree)tree.SelectedItem).ItemData.code != ((System.Windows.Controls.TextBox)sender).Text)
+                {
+                    int sw = 0;
+                    for (int i = 0; i < Items.allItems.Count; i++)
+                    {
+                        if (Items.allItems[i].code == ((System.Windows.Controls.TextBox)sender).Text)
+                        {
+                            MessageBox.Show("کد کالای انتخابی تکراری است", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                            e.Handled = true;
+                            sw = 1;
+                        }
+                    }
+                    if (sw == 0)
+                    {
+                        _materialManagementViewModel.ChangeForCanceling();
+                        saveItem.IsEnabled = true;
+                    }
+                }
             }
             catch (Exception eeeee)
             {
                 MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
             }
         }
+
+        private void itemTitle_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            try
+            {
+                if (tree.SelectedItem != null && ((ItemInTree)tree.SelectedItem).ItemData.title != ((System.Windows.Controls.TextBox)sender).Text)
+                {
+                    _materialManagementViewModel.ChangeForCanceling();
+                    saveItem.IsEnabled = true;
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (tree.SelectedItem != null && ((ItemInTree)tree.SelectedItem).ItemData.HasChanged)
+                {
+                    _materialManagementViewModel.ChangeForCanceling();
+                    saveItem.IsEnabled = true;
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+            }
+        }
+
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {

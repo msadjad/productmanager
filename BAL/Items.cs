@@ -426,8 +426,11 @@ namespace IMPOS.BLL
             get { return _title; }
             set
             {
-                _title = value;
-                _hasChanged = true;
+                if (_title != value)
+                {
+                    _title = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -439,8 +442,11 @@ namespace IMPOS.BLL
             get { return _code; }
             set
             {
-                _code = value;
-                _hasChanged = true;
+                if (_code != value)
+                {
+                    _code = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -452,8 +458,11 @@ namespace IMPOS.BLL
             get { return _unit; }
             set
             {
-                _unit = value;
-                _hasChanged = true;
+                if (_unit != value)
+                {
+                    _unit = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -465,8 +474,11 @@ namespace IMPOS.BLL
             get { return _type; }
             set
             {
-                _type = value;
-                _hasChanged = true;
+                if (_type != value)
+                {
+                    _type = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -480,8 +492,11 @@ namespace IMPOS.BLL
             get { return _description; }
             set
             {
-                _description = value;
-                _hasChanged = true;
+                if (_description != value)
+                {
+                    _description = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -493,8 +508,11 @@ namespace IMPOS.BLL
             get { return _size; }
             set
             {
-                _size = value;
-                _hasChanged = true;
+                if (_size != value)
+                {
+                    _size = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -506,8 +524,11 @@ namespace IMPOS.BLL
             get { return _quentity; }
             set
             {
-                _quentity = value;
-                _hasChanged = true;
+                if (_quentity != value)
+                {
+                    _quentity = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -519,8 +540,11 @@ namespace IMPOS.BLL
             get { return _availableNow; }
             set
             {
-                _availableNow = value;
-                _hasChanged = true;
+                if (_availableNow != value)
+                {
+                    _availableNow = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -532,8 +556,11 @@ namespace IMPOS.BLL
             get { return _assignedQuantity; }
             set
             {
-                _assignedQuantity = value;
-                _hasChanged = true;
+                if (_assignedQuantity != value)
+                {
+                    _assignedQuantity = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -545,8 +572,11 @@ namespace IMPOS.BLL
             get { return _emergencyStorage; }
             set
             {
-                _emergencyStorage = value;
-                _hasChanged = true;
+                if (_emergencyStorage != value)
+                {
+                    _emergencyStorage = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -558,8 +588,11 @@ namespace IMPOS.BLL
             get { return _wastedQuantity; }
             set
             {
-                _wastedQuantity = value;
-                _hasChanged = true;
+                if (_wastedQuantity != value)
+                {
+                    _wastedQuantity = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -587,8 +620,11 @@ namespace IMPOS.BLL
             get { return _operationName; }
             set
             {
-                _operationName = value;
-                _hasChanged = true;
+                if (_operationName != value)
+                {
+                    _operationName = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -600,8 +636,11 @@ namespace IMPOS.BLL
             get { return _machineType; }
             set
             {
-                _machineType = value;
-                _hasChanged = true;
+                if (_machineType != value)
+                {
+                    _machineType = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -613,8 +652,11 @@ namespace IMPOS.BLL
             get { return _prepareTime; }
             set
             {
-                _prepareTime = value;
-                _hasChanged = true;
+                if (_prepareTime != value)
+                {
+                    _prepareTime = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -626,8 +668,11 @@ namespace IMPOS.BLL
             get { return _buildUnitTime; }
             set
             {
-                _buildUnitTime = value;
-                _hasChanged = true;
+                if (_buildUnitTime != value)
+                {
+                    _buildUnitTime = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -639,8 +684,11 @@ namespace IMPOS.BLL
             get { return _shipmentTime; }
             set
             {
-                _shipmentTime = value;
-                _hasChanged = true;
+                if (_shipmentTime != value)
+                {
+                    _shipmentTime = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -652,8 +700,11 @@ namespace IMPOS.BLL
             get { return _transmitGroupSize; }
             set
             {
-                _transmitGroupSize = value;
-                _hasChanged = true;
+                if (_transmitGroupSize != value)
+                {
+                    _transmitGroupSize = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -665,8 +716,11 @@ namespace IMPOS.BLL
             get { return _operationDescription; }
             set
             {
-                _operationDescription = value;
-                _hasChanged = true;
+                if (_operationDescription != value)
+                {
+                    _operationDescription = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -678,8 +732,11 @@ namespace IMPOS.BLL
             get { return _supplier; }
             set
             {
-                _supplier = value;
-                _hasChanged = true;
+                if (_supplier != value)
+                {
+                    _supplier = value;
+                    _hasChanged = true;
+                }
             }
         }
 
@@ -691,10 +748,13 @@ namespace IMPOS.BLL
             get { return _supplyTime; }
             set
             {
-                _supplyTime = value;
-                var rrr = new PROSTR().strrat;
-                var rrr2 = new PROSTR().stretc;
-                _hasChanged = true;
+                if (_supplyTime != value)
+                {
+                    _supplyTime = value;
+                    var rrr = new PROSTR().strrat;
+                    var rrr2 = new PROSTR().stretc;
+                    _hasChanged = true;
+                }
             }
         }
         
