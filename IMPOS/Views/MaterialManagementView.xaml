@@ -133,7 +133,7 @@
                                                   telerik:ScreenTip.Title="ذخیره"
                                                   telerik:ScreenTip.Description="با استفاده از این گزینه میتوانید کالای مورد نظر را برداشته تا در جای دیگر قرار دهید. تا زمانی که قرار نداهید، کالای مورد نظر جا به جا نخواهد شد"/>-->
                     <telerik:RadRibbonButton Text="انصراف" LargeImage="..\Images\cancel.png" Size="Large" FontFamily="B Zar" FontSize="13" Command="{Binding CrudClick}" CommandParameter="cancel"
-                                                  telerik:ScreenTip.Title="انصراف" Click="ButtonBase_SaveClick" IsEnabled="{Binding CancleActivated,Mode=TwoWay}"
+                                                  telerik:ScreenTip.Title="انصراف" Click="ButtonBase_SaveClick" IsEnabled="False" Name="cancelItem"
                                                   telerik:ScreenTip.Description=""/>
                     <telerik:RadRibbonButton Text="حذف" LargeImage="..\Images\Remove.png" Size="Large" FontFamily="B Zar" FontSize="13" Command="{Binding CrudClick}" CommandParameter="del"
                                                   telerik:ScreenTip.Title="حذف(Delete)"  IsEnabled="{Binding NewDisabling,Mode=OneWay}"
@@ -601,7 +601,7 @@
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Column="1" Grid.Row="0" Text="واحد اندازه گیری"/>
                                 <Border Grid.Column="2" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
-                                        <ComboBox TabIndex="3" ItemsSource="{Binding MeasuringTypes,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushUnit,Mode=TwoWay}" SelectionChanged="Selector_OnSelectionChanged" SelectedItem="{Binding CurrentMeasuringType,Mode=TwoWay}">
+                                        <ComboBox TabIndex="3" ItemsSource="{Binding MeasuringTypes,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushUnit,Mode=TwoWay}" LostFocus="itemMeasure_OnLostFocus" Name="itemMeasure" SelectedItem="{Binding CurrentMeasuringType,Mode=TwoWay}">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding title}"></TextBlock>
@@ -622,7 +622,7 @@
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Column="1" Grid.Row="0" Text="نوع"/>
                                 <Border  Grid.Column="2" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
-                                        <ComboBox TabIndex="4" ItemsSource="{Binding ItemTypes,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushType,Mode=TwoWay}" SelectionChanged="Selector_OnSelectionChanged" Name="MadeOrPurchase" SelectedItem="{Binding CurrentItemType,Mode=TwoWay}" >
+                                        <ComboBox TabIndex="4" ItemsSource="{Binding ItemTypes,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushType,Mode=TwoWay}" LostFocus="MadeOrPurchase_OnLostFocus" Name="MadeOrPurchase" SelectedItem="{Binding CurrentItemType,Mode=TwoWay}" >
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Title}"></TextBlock>
@@ -655,7 +655,7 @@
                                     <RowDefinition Height="5"/>
                                 </Grid.RowDefinitions>
                                 <Border Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
-                                        <TextBox  AcceptsReturn="True" TabIndex="5" TextChanged="TextBox_OnTextChanged" GotFocus="TextBox_OnLostFocus"   TextWrapping="Wrap" HorizontalScrollBarVisibility="Disabled" Text="{Binding CurrentGroup.ItemData.description,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushDescription,Mode=TwoWay}"/>
+                                        <TextBox  AcceptsReturn="True" TabIndex="5" Name="itemDescription" PreviewLostKeyboardFocus="itemDescription_PreviewLostKeyboardFocus" TextWrapping="Wrap" HorizontalScrollBarVisibility="Disabled" Text="{Binding CurrentGroup.ItemData.description,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushDescription,Mode=TwoWay}"/>
                                 </Border>
                             </Grid>
                         </Grid>
@@ -688,7 +688,7 @@
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Column="1" Grid.Row="0" Text="کد" Width="20"/>
                                     <Border BorderBrush="Black" BorderThickness="1" Grid.Column="3" Grid.Row="0">
-                                            <ComboBox TabIndex="6" Name="taminCode" Background="{Binding CurrentBackColorOfData.BrushSupplier,Mode=TwoWay}" SelectionChanged="Selector_OnSelectionChanged" ItemsSource="{Binding Suppliers,Mode=TwoWay}" SelectedItem="{Binding CurrentSupplier,Mode=TwoWay}">
+                                            <ComboBox TabIndex="6" Name="taminCode" Background="{Binding CurrentBackColorOfData.BrushSupplier,Mode=TwoWay}" LostFocus="taminCode_OnLostFocus" ItemsSource="{Binding Suppliers,Mode=TwoWay}" SelectedItem="{Binding CurrentSupplier,Mode=TwoWay}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Text="{Binding code}"></TextBlock>
@@ -698,7 +698,7 @@
                                     </Border>
                                     <TextBlock Grid.Column="5" Grid.Row="0" Text="مدت زمان تهیه" Width="70"/>
                                     <Border BorderBrush="Black" BorderThickness="1" Grid.Column="7" Grid.Row="0">
-                                            <TextBox TabIndex="7" TextChanged="TextBox_OnTextChanged" GotFocus="TextBox_OnLostFocus"   Text="{Binding CurrentGroup.ItemData.supplyTime,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushSupplyTime,Mode=TwoWay}"/>
+                                            <TextBox TabIndex="7" Name="supplyTime" TextChanged="supplyTime_OnTextChanged" PreviewLostKeyboardFocus="supplyTime_PreviewLostKeyboardFocus"   Text="{Binding CurrentGroup.ItemData.supplyTime,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushSupplyTime,Mode=TwoWay}"/>
                                     </Border>
                                     <TextBlock Grid.Column="9" Grid.Row="0" Text="روز" Width="20"/>
                                 </Grid>
@@ -715,7 +715,7 @@
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Column="1" Grid.Row="0" Text="عنوان" Width="30"/>
                                     <Border BorderBrush="Black" BorderThickness="1" Grid.Column="3" Grid.Row="0">
-                                            <ComboBox TabIndex="8" ItemsSource="{Binding Suppliers,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushSupplier,Mode=TwoWay}" SelectionChanged="Selector_OnSelectionChanged" SelectedItem="{Binding CurrentSupplier,Mode=TwoWay}">
+                                            <ComboBox Name="taminTitle" TabIndex="8" ItemsSource="{Binding Suppliers,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushSupplier,Mode=TwoWay}" LostFocus="taminTitle_OnLostFocus" SelectedItem="{Binding CurrentSupplier,Mode=TwoWay}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
@@ -756,7 +756,7 @@
                                         <RowDefinition Height="30"/>
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Column="1" Grid.Row="0" Text="عنوان عملیات" Width="75" Grid.ColumnSpan="2"/>
-                                        <TextBox TabIndex="9" BorderBrush="Black" TextChanged="TextBox_OnTextChanged" GotFocus="TextBox_OnLostFocus"   Text="{Binding CurrentGroup.ItemData.operationName,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushOperationName,Mode=TwoWay}" BorderThickness="1" Grid.Column="3" Grid.Row="0"/>
+                                        <TextBox Name="itemOperationName" TabIndex="9" BorderBrush="Black" PreviewLostKeyboardFocus="itemOperationName_PreviewLostKeyboardFocus" MaxLength="50" Text="{Binding CurrentGroup.ItemData.operationName,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushOperationName,Mode=TwoWay}" BorderThickness="1" Grid.Column="3" Grid.Row="0"/>
                                 </Grid>
                                 <Grid Height="35" Grid.Row="1">
                                     <Grid.ColumnDefinitions>
@@ -770,7 +770,7 @@
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Column="1" Grid.Row="1" Text="نوع منبع تولیدی" Width="75"/>
                                         <Border  BorderBrush="Black" BorderThickness="1"  Grid.Column="2" Grid.Row="1">
-                                            <ComboBox TabIndex="10" Background="{Binding CurrentBackColorOfData.BrushMachineType,Mode=TwoWay}" ItemsSource="{Binding MachineTypes,Mode=TwoWay}" SelectedItem="{Binding CurrentMachineType,Mode=TwoWay}">
+                                            <ComboBox Name="resourceName" TabIndex="10" LostFocus="resourceName_OnLostFocus" Background="{Binding CurrentBackColorOfData.BrushMachineType,Mode=TwoWay}" ItemsSource="{Binding MachineTypes,Mode=TwoWay}" SelectedItem="{Binding CurrentMachineType,Mode=TwoWay}">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <!--<StackPanel Orientation="Horizontal">-->
@@ -796,7 +796,7 @@
                                         <RowDefinition Height="30"/>
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Column="1" Grid.Row="0" Text="زمان آماده سازی"/>
-                                        <TextBox BorderBrush="Black" TextChanged="TextBox_OnTextChanged" GotFocus="TextBox_OnLostFocus"   TabIndex="12" Text="{Binding CurrentGroup.ItemData.prepareTime,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushPrepareTime,Mode=TwoWay}" BorderThickness="1" Grid.Column="2" Grid.Row="0"/>
+                                        <TextBox BorderBrush="Black" Name="prepareTime" TextChanged="prepareTime_OnTextChanged" PreviewLostKeyboardFocus="prepareTime_PreviewLostKeyboardFocus"   TabIndex="12" Text="{Binding CurrentGroup.ItemData.prepareTime,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushPrepareTime,Mode=TwoWay}" BorderThickness="1" Grid.Column="2" Grid.Row="0"/>
                                 </Grid>
                                 <Grid Height="30" Grid.Row="3">
                                     <Grid.ColumnDefinitions>
@@ -809,7 +809,7 @@
                                         <RowDefinition Height="30"/>
                                     </Grid.RowDefinitions>
                                         <TextBlock Grid.Column="1" Grid.Row="0" Text="زمان تولید یک واحد"/>
-                                        <TextBox BorderBrush="Black" TextChanged="TextBox_OnTextChanged" GotFocus="TextBox_OnLostFocus"   TabIndex="13" Text="{Binding CurrentGroup.ItemData.buildUnitTime,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushBuildUnitTime,Mode=TwoWay}" BorderThickness="1" Grid.Column="2" Grid.Row="0"/>
+                                        <TextBox BorderBrush="Black" Name="unitPrepareTime" TextChanged="unitPrepareTime_OnTextChanged" PreviewLostKeyboardFocus="unitPrepareTime_PreviewLostKeyboardFocus"   TabIndex="13" Text="{Binding CurrentGroup.ItemData.buildUnitTime,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushBuildUnitTime,Mode=TwoWay}" BorderThickness="1" Grid.Column="2" Grid.Row="0"/>
                                 </Grid>
                                 <Grid Height="30" Grid.Row="4">
                                     <Grid.ColumnDefinitions>
@@ -822,7 +822,7 @@
                                         <RowDefinition Height="30"/>
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Column="1" Grid.Row="0" Text="زمان حمل و نقل"/>
-                                        <TextBox BorderBrush="Black" TextChanged="TextBox_OnTextChanged" GotFocus="TextBox_OnLostFocus"   TabIndex="14" Text="{Binding CurrentGroup.ItemData.shipmentTime,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushShipmentTime,Mode=TwoWay}" BorderThickness="1" Grid.Column="2" Grid.Row="0"/>
+                                        <TextBox BorderBrush="Black" Name="transferTime" TextChanged="transferTime_OnTextChanged" PreviewLostKeyboardFocus="transferTime_PreviewLostKeyboardFocus"   TabIndex="14" Text="{Binding CurrentGroup.ItemData.shipmentTime,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushShipmentTime,Mode=TwoWay}" BorderThickness="1" Grid.Column="2" Grid.Row="0"/>
                                 </Grid>
                                 <Grid Height="30" Grid.Row="5">
                                     <Grid.ColumnDefinitions>
@@ -835,7 +835,7 @@
                                         <RowDefinition Height="30"/>
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Column="1" Grid.Row="0" Text="دسته انتقالی"/>
-                                        <TextBox BorderBrush="Black" TextChanged="TextBox_OnTextChanged" GotFocus="TextBox_OnLostFocus"   TabIndex="15" Text="{Binding CurrentGroup.ItemData.transmitGroupSize,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushTransmitGroupSize,Mode=TwoWay}" BorderThickness="1" Grid.Column="2" Grid.Row="0"/>
+                                        <TextBox BorderBrush="Black" Name="batchSize" TextChanged="batchSize_OnTextChanged" PreviewLostKeyboardFocus="batchSize_PreviewLostKeyboardFocus"  TabIndex="15" Text="{Binding CurrentGroup.ItemData.transmitGroupSize,Mode=TwoWay}" Background="{Binding CurrentBackColorOfData.BrushTransmitGroupSize,Mode=TwoWay}" BorderThickness="1" Grid.Column="2" Grid.Row="0"/>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -892,10 +892,10 @@
                                         <ColumnDefinition Width="5"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="1" Text="سفارش دهی"/>
-                                    <RadioButton TabIndex="18"  Grid.Column="2" GroupName="orderingType" Background="{Binding CurrentBackColorOfData.BrushSize,Mode=TwoWay}" IsChecked="{Binding SizeNot,Mode=OneWay}"  Content="متغیر"/>
-                                    <RadioButton TabIndex="19" Grid.Column="3" GroupName="orderingType" Background="{Binding CurrentBackColorOfData.BrushSize,Mode=TwoWay}"  Content="ثابت" Name="isFixed" IsChecked="{Binding CurrentGroup.ItemData.size,Mode=TwoWay}" />
+                                    <RadioButton TabIndex="18"  Grid.Column="2" GroupName="orderingType" Checked="motaghayer_OnLostFocus"  Background="{Binding CurrentBackColorOfData.BrushSize,Mode=TwoWay}" IsChecked="{Binding SizeNot,Mode=OneWay}"  Content="متغیر"/>
+                                    <RadioButton TabIndex="19" Grid.Column="3" GroupName="orderingType" Checked="sabet_OnLostFocus" Background="{Binding CurrentBackColorOfData.BrushSize,Mode=TwoWay}"  Content="ثابت" Name="isFixed" IsChecked="{Binding CurrentGroup.ItemData.size,Mode=TwoWay}" />
                                     <Border  Grid.Column="4" BorderBrush="Black" BorderThickness="1" Height="{Binding Path=IsChecked,ElementName=isFixed,Converter={StaticResource HeightEquilZero}}" >
-                                        <TextBox TabIndex="20" TextChanged="TextBox_OnTextChanged" GotFocus="TextBox_OnLostFocus"   VerticalAlignment="Bottom" Height="{Binding Path=IsChecked,ElementName=isFixed,Converter={StaticResource HeightEquilZero}}" Background="{Binding CurrentBackColorOfData.BrushQuentity,Mode=TwoWay}" Text="{Binding CurrentGroup.ItemData.quentity,Mode=TwoWay}" />
+                                        <TextBox TabIndex="20" Name="orderSize" TextChanged="orderSize_OnTextChanged" PreviewLostKeyboardFocus="orderSize_PreviewLostKeyboardFocus" VerticalAlignment="Bottom" Height="{Binding Path=IsChecked,ElementName=isFixed,Converter={StaticResource HeightEquilZero}}" Background="{Binding CurrentBackColorOfData.BrushQuentity,Mode=TwoWay}" Text="{Binding CurrentGroup.ItemData.quentity,Mode=TwoWay}" />
                                     </Border>
                                 </Grid>
                                 <Grid Grid.Row="1" Height="30">
@@ -914,7 +914,7 @@
                                     </Border>
                                     <TextBlock Grid.Column="4" Text="موجودی تخصیصی"/>
                                     <Border BorderBrush="Black" BorderThickness="1" Grid.Column="5">
-                                        <TextBox  TabIndex="22" TextChanged="TextBox_OnTextChanged" Name="ffff" Background="{Binding CurrentBackColorOfData.BrushAssignedQuantity,Mode=TwoWay}" GotFocus="TextBox_OnLostFocus"   Text="{Binding CurrentGroup.ItemData.assignedQuantity,Mode=TwoWay}"/>
+                                        <TextBox  TabIndex="22" TextChanged="ffff_OnTextChanged" PreviewLostKeyboardFocus="ffff_PreviewLostKeyboardFocus" Name="ffff" Background="{Binding CurrentBackColorOfData.BrushAssignedQuantity,Mode=TwoWay}" Text="{Binding CurrentGroup.ItemData.assignedQuantity,Mode=TwoWay}"/>
                                     </Border>
                                 </Grid>
                                 <Grid Grid.Row="2" Height="30">
@@ -929,11 +929,11 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="1" Text="ذخیره احتیاطی"/>
                                     <Border  BorderBrush="Black"  BorderThickness="1" Grid.Column="2">
-                                        <TextBox  IsEnabled="false" TabIndex="23"  Background="{Binding CurrentBackColorOfData.BrushEmergencyStorage,Mode=TwoWay}" Text="{Binding CurrentGroup.ItemData.emergencyStorage,Mode=TwoWay}"/>
+                                        <TextBox  TabIndex="23" Name="emergencyStorage" TextChanged="emergencyStorage_OnTextChanged" PreviewLostKeyboardFocus="emergencyStorage_PreviewLostKeyboardFocus" Background="{Binding CurrentBackColorOfData.BrushEmergencyStorage,Mode=TwoWay}" Text="{Binding CurrentGroup.ItemData.emergencyStorage,Mode=TwoWay}"/>
                                     </Border>
                                     <TextBlock Grid.Column="4" Text="مقدار ضایعات"/>
                                     <Border  BorderBrush="Black" BorderThickness="1" Grid.Column="5">
-                                        <TextBox TabIndex="24"  TextChanged="TextBox_OnTextChanged" GotFocus="TextBox_OnLostFocus"  Background="{Binding CurrentBackColorOfData.BrushWastedQuantity,Mode=TwoWay}"  Text="{Binding CurrentGroup.ItemData.wastedQuantity,Mode=TwoWay}"/>
+                                        <TextBox TabIndex="24"  Name="wasteQuantity" TextChanged="wasteQuantity_OnTextChanged" PreviewLostKeyboardFocus="wasteQuantity_PreviewLostKeyboardFocus"  Background="{Binding CurrentBackColorOfData.BrushWastedQuantity,Mode=TwoWay}"  Text="{Binding CurrentGroup.ItemData.wastedQuantity,Mode=TwoWay}"/>
                                     </Border>
                                     <TextBox Name="lastFocuse" Width="0"></TextBox>
                                 </Grid>

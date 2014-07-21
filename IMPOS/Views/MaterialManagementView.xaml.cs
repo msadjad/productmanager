@@ -67,7 +67,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "MaterialManagementView Error description", MessageBoxButton.OK);
             }
         }
 
@@ -85,7 +85,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message,"Error description",MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "MaterialManagementView_DataContextChanged Error description", MessageBoxButton.OK);
             }
         }
 
@@ -110,7 +110,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "LoadTreeDataOnlyForDrop Error description", MessageBoxButton.OK);
             }
         }
         public void LoadItems(List<Helpers.ItemInTree> items, RadTreeViewItem parent)
@@ -132,7 +132,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "LoadItems Error description", MessageBoxButton.OK);
             }
         }
 
@@ -158,7 +158,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "IsHideMethodForOperationSuplier Error description", MessageBoxButton.OK);
             }
         }
 
@@ -190,7 +190,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "IsHideMethod Error description", MessageBoxButton.OK);
             }
         }
 
@@ -262,7 +262,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "GetTreeItem Error description", MessageBoxButton.OK);
             }
         }
 
@@ -289,7 +289,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "findItem Error description", MessageBoxButton.OK);
             } 
         }
 
@@ -321,7 +321,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "GetUserAppDataPath Error description", MessageBoxButton.OK);
             }
             return null;
         }
@@ -345,7 +345,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "Window_Closed Error description", MessageBoxButton.OK);
             }
         }
 
@@ -373,7 +373,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "Window_SizeChanged Error description", MessageBoxButton.OK);
             }
         }
 
@@ -464,18 +464,54 @@ namespace IMPOS.Views
         {
             try
             {
-                long ID = ((Helpers.ItemInTree) ((RadTreeView) sender).SelectedItem).ItemData.id;
-                BindImages(ID);
-                btnAddImage.Visibility = Visibility.Visible;
-                btnDelImage.Visibility = Visibility.Visible;
-            }
-            catch (NullReferenceException)
-            {
-
+                Item item = null;
+                if (e.RemovedItems.Count > 0)
+                {
+                    for (int i = 0; i < Items.allItems.Count; i++)
+                        if (((ItemInTree)e.RemovedItems[0]).ItemData.id == Items.allItems[i].id)
+                        {
+                            item = Items.allItems[i];
+                            break;
+                        }
+                    if (item.HasChanged == false)
+                    {
+                        if (((RadTreeView)sender).SelectedItem != null)
+                        {
+                            long ID = ((Helpers.ItemInTree)((RadTreeView)sender).SelectedItem).ItemData.id;
+                            BindImages(ID);
+                            btnAddImage.Visibility = Visibility.Visible;
+                            btnDelImage.Visibility = Visibility.Visible;
+                        }
+                    }
+                    else
+                    {
+                        MessageBoxResult mbr = MessageBox.Show("در کالای قبل تغییراتی اتفاق افتاده است، آیا میخواهید تغییرات اعمال شده را ذخیره کنید یا انصراف دهید؟", "سوال", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                        if (mbr == MessageBoxResult.Yes)
+                        {
+                            item.saveChanges();
+                        }
+                        else
+                        {
+                            item.loadAgain();
+                        }
+                        cancelItem.IsEnabled = false;
+                        saveItem.IsEnabled = false;
+                    }
+                }
+                else
+                {
+                    if (((RadTreeView)sender).SelectedItem != null)
+                    {
+                        long ID = ((Helpers.ItemInTree)((RadTreeView)sender).SelectedItem).ItemData.id;
+                        BindImages(ID);
+                        btnAddImage.Visibility = Visibility.Visible;
+                        btnDelImage.Visibility = Visibility.Visible;
+                    }
+                }
             }
             catch (Exception eeeeee)
             {
-                MessageBox.Show(eeeeee.Message, "Error Description", MessageBoxButton.OK);
+                MessageBox.Show(eeeeee.Message, "treeViewProductStructure_SelectionChanged Error Description", MessageBoxButton.OK);
             }
         }
 
@@ -488,13 +524,14 @@ namespace IMPOS.Views
                         MessageBoxImage.Question, MessageBoxResult.No, MessageBoxOptions.RtlReading) == MessageBoxResult.Yes)
                 {
                     var items = (ImageEntity)(LsImageGallery).SelectedItem;
+                    string temp = items.OrginalNameImagePath;
                     File.Delete(items.OrginalNameImagePath);
                     BindImages(((Helpers.ItemInTree) (tree).SelectedItem).ItemData.id);
                 }
             }
             catch (Exception eeeeee)
             {
-                MessageBox.Show(eeeeee.Message, "Error Description", MessageBoxButton.OK);
+                MessageBox.Show(eeeeee.Message, "Button_Click_3 Error Description", MessageBoxButton.OK);
             }
         }
 
@@ -521,7 +558,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeeee)
             {
-                MessageBox.Show(eeeeee.Message, "Error Description", MessageBoxButton.OK);
+                MessageBox.Show(eeeeee.Message, "Button_Click_2 Error Description", MessageBoxButton.OK);
             }
         }
 
@@ -544,7 +581,7 @@ namespace IMPOS.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "BindImages Error Description", MessageBoxButton.OK);
             }
         }
 
@@ -598,7 +635,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "MaterialManagementView_OnInitialized Error description", MessageBoxButton.OK);
             }
         }
 
@@ -617,7 +654,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "RadDocking_OnClose Error description", MessageBoxButton.OK);
             }
         }
 
@@ -667,7 +704,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "Cheked_OnClick Error description", MessageBoxButton.OK);
             }
         }
 
@@ -684,12 +721,12 @@ namespace IMPOS.Views
         {
             try
             {
-
                 lastFocuse.Focus();
+                disableSaveCancel();
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "ButtonBase_SaveClick Error description", MessageBoxButton.OK);
             }
         }
 
@@ -701,7 +738,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "radDocking_Show Error description", MessageBoxButton.OK);
             }
         }
 
@@ -716,7 +753,7 @@ namespace IMPOS.Views
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "Tree_OnDrop Error description", MessageBoxButton.OK);
             }
         }
 
@@ -738,10 +775,31 @@ namespace IMPOS.Views
         }
          */
 
+        
+
+        private void enableSaveCancel()
+        {
+
+            saveItem.IsEnabled   = true;
+            cancelItem.IsEnabled = true;
+        }
+
+        private void disableSaveCancel()
+        {
+            saveItem.IsEnabled   = false;
+            cancelItem.IsEnabled = false;
+        }
+
         private void itemCode_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             try
             {
+                if (((System.Windows.Controls.TextBox)sender).Text == "")
+                {
+                    MessageBox.Show("فیلد کد کالا نباید خالی باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                    e.Handled = true;
+                    return;
+                }
                 if (tree.SelectedItem != null && ((ItemInTree)tree.SelectedItem).ItemData.code != ((System.Windows.Controls.TextBox)sender).Text)
                 {
                     int sw = 0;
@@ -756,14 +814,13 @@ namespace IMPOS.Views
                     }
                     if (sw == 0)
                     {
-                        _materialManagementViewModel.ChangeForCanceling();
-                        saveItem.IsEnabled = true;
+                        enableSaveCancel();
                     }
                 }
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "itemCode_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
             }
         }
 
@@ -771,56 +828,559 @@ namespace IMPOS.Views
         {
             try
             {
+
+                if (((System.Windows.Controls.TextBox)sender).Text == "")
+                {
+                    MessageBox.Show("فیلد نام کالا نباید خالی باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                    e.Handled = true;
+                    return;
+                }
                 if (tree.SelectedItem != null && ((ItemInTree)tree.SelectedItem).ItemData.title != ((System.Windows.Controls.TextBox)sender).Text)
                 {
-                    _materialManagementViewModel.ChangeForCanceling();
-                    saveItem.IsEnabled = true;
+                    enableSaveCancel();
                 }
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "itemTitle_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
             }
         }
 
-        private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        private void itemMeasure_OnLostFocus(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (tree.SelectedItem != null && ((ItemInTree)tree.SelectedItem).ItemData.HasChanged)
                 {
-                    _materialManagementViewModel.ChangeForCanceling();
-                    saveItem.IsEnabled = true;
+                    enableSaveCancel();
                 }
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "itemMeasure_OnLostFocus Error description", MessageBoxButton.OK);
             }
         }
 
-
-        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void MadeOrPurchase_OnLostFocus(object sender, RoutedEventArgs e)
         {
             try
             {
-                _materialManagementViewModel.ChangeForCanceling();
+                if (tree.SelectedItem != null && ((ItemInTree)tree.SelectedItem).ItemData.HasChanged)
+                {
+                    enableSaveCancel();
+                }
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "MadeOrPurchase_OnLostFocus Error description", MessageBoxButton.OK);
             }
         }
 
-        private void TextBox_OnLostFocus(object sender, RoutedEventArgs e)
+        private void itemDescription_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             try
             {
-                _materialManagementViewModel.ChangeForCanceling();
+
+                if (tree.SelectedItem != null && (((ItemInTree)tree.SelectedItem).ItemData.description != ((System.Windows.Controls.TextBox)sender).Text) && (((ItemInTree)tree.SelectedItem).ItemData.description != null || ((System.Windows.Controls.TextBox)sender).Text != ""))
+                {
+                    enableSaveCancel();
+                }
             }
             catch (Exception eeeee)
             {
-                MessageBox.Show(eeeee.Message, "Error description", MessageBoxButton.OK);
+                MessageBox.Show(eeeee.Message, "itemDescription_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void taminCode_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (tree.SelectedItem != null && ((ItemInTree)tree.SelectedItem).ItemData.HasChanged)
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "taminCode_OnLostFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void taminTitle_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (tree.SelectedItem != null && ((ItemInTree)tree.SelectedItem).ItemData.HasChanged)
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "taminTitle_OnLostFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void supplyTime_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            try
+            {
+                if (((System.Windows.Controls.TextBox)sender).Text == "" && ((ItemInTree)tree.SelectedItem).ItemData.type == 1)
+                {
+                    MessageBox.Show("فیلد مدت زمان تهیه نباید خالی باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                    e.Handled = true;
+                    return;
+                }
+                if (tree.SelectedItem != null && (((ItemInTree)tree.SelectedItem).ItemData.supplyTime != double.Parse(((System.Windows.Controls.TextBox)sender).Text)))
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "supplyTime_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void supplyTime_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                System.Windows.Controls.TextBox textBox = sender as System.Windows.Controls.TextBox;
+                double iValue = -1;
+
+                if (double.TryParse(textBox.Text, out iValue) == false || (iValue <= 0 || (iValue % 1) != 0))
+                {
+                    TextChange textChange = e.Changes.ElementAt<TextChange>(0);
+                    int iAddedLength = textChange.AddedLength;
+                    int iOffset = textChange.Offset;
+
+                    textBox.Text = textBox.Text.Remove(iOffset, iAddedLength);
+                    textBox.CaretIndex = iOffset;
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "supplyTime_OnTextChanged Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void itemOperationName_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            try
+            {
+                if (((System.Windows.Controls.TextBox)sender).Text == "" && ((ItemInTree)tree.SelectedItem).ItemData.type == 2)
+                {
+                    MessageBox.Show("فیلد عنوان عملیات", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                    e.Handled = true;
+                    return;
+                }
+                if (tree.SelectedItem != null && (((ItemInTree)tree.SelectedItem).ItemData.operationName != ((System.Windows.Controls.TextBox)sender).Text))
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "itemOperationName_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void resourceName_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (tree.SelectedItem != null && ((ItemInTree)tree.SelectedItem).ItemData.HasChanged)
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "resourceName_OnLostFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void prepareTime_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            try
+            {
+                if (((System.Windows.Controls.TextBox)sender).Text == "" && ((ItemInTree)tree.SelectedItem).ItemData.type == 2)
+                {
+                    MessageBox.Show("فیلد زمان آماده سازی نباید خالی باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                    e.Handled = true;
+                    return;
+                }
+                if (tree.SelectedItem != null && (((ItemInTree)tree.SelectedItem).ItemData.prepareTime != double.Parse(((System.Windows.Controls.TextBox)sender).Text)))
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "prepareTime_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void prepareTime_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                System.Windows.Controls.TextBox textBox = sender as System.Windows.Controls.TextBox;
+                double iValue = -1;
+
+                if (double.TryParse(textBox.Text, out iValue) == false || (iValue < 0 || (iValue % 1) != 0))
+                {
+                    TextChange textChange = e.Changes.ElementAt<TextChange>(0);
+                    int iAddedLength = textChange.AddedLength;
+                    int iOffset = textChange.Offset;
+
+                    textBox.Text = textBox.Text.Remove(iOffset, iAddedLength);
+                    textBox.CaretIndex = iOffset;
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "prepareTime_OnTextChanged Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void unitPrepareTime_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            try
+            {
+                if (((System.Windows.Controls.TextBox)sender).Text == "" && ((ItemInTree)tree.SelectedItem).ItemData.type == 2)
+                {
+                    MessageBox.Show("فیلد زمان آماده سازی یک واحد نباید خالی باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                    e.Handled = true;
+                    return;
+                }
+                if (tree.SelectedItem != null && (((ItemInTree)tree.SelectedItem).ItemData.buildUnitTime != double.Parse(((System.Windows.Controls.TextBox)sender).Text)))
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "unitPrepareTime_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void unitPrepareTime_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                System.Windows.Controls.TextBox textBox = sender as System.Windows.Controls.TextBox;
+                double iValue = -1;
+
+                if (double.TryParse(textBox.Text, out iValue) == false || (iValue <= 0 || (iValue % 1) != 0))
+                {
+                    TextChange textChange = e.Changes.ElementAt<TextChange>(0);
+                    int iAddedLength = textChange.AddedLength;
+                    int iOffset = textChange.Offset;
+
+                    textBox.Text = textBox.Text.Remove(iOffset, iAddedLength);
+                    textBox.CaretIndex = iOffset;
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "unitPrepareTime_OnTextChanged Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void transferTime_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            try
+            {
+                if (((System.Windows.Controls.TextBox)sender).Text == "" && ((ItemInTree)tree.SelectedItem).ItemData.type == 2)
+                {
+                    MessageBox.Show("فیلد زمان حمل و نقل نباید خالی باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                    e.Handled = true;
+                    return;
+                }
+                if (tree.SelectedItem != null && (((ItemInTree)tree.SelectedItem).ItemData.shipmentTime != double.Parse(((System.Windows.Controls.TextBox)sender).Text)))
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "transferTime_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void transferTime_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                System.Windows.Controls.TextBox textBox = sender as System.Windows.Controls.TextBox;
+                double iValue = -1;
+
+                if (double.TryParse(textBox.Text, out iValue) == false || (iValue < 0 || (iValue % 1) != 0))
+                {
+                    TextChange textChange = e.Changes.ElementAt<TextChange>(0);
+                    int iAddedLength = textChange.AddedLength;
+                    int iOffset = textChange.Offset;
+
+                    textBox.Text = textBox.Text.Remove(iOffset, iAddedLength);
+                    textBox.CaretIndex = iOffset;
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "transferTime_OnTextChanged Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void batchSize_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            try
+            {
+                if (((System.Windows.Controls.TextBox)sender).Text == "" && ((ItemInTree)tree.SelectedItem).ItemData.type == 2)
+                {
+                    MessageBox.Show("فیلد دسته انتقالی نباید خالی باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                    e.Handled = true;
+                    return;
+                }
+                if (tree.SelectedItem != null && (((ItemInTree)tree.SelectedItem).ItemData.transmitGroupSize != double.Parse(((System.Windows.Controls.TextBox)sender).Text)))
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "batchSize_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void batchSize_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                System.Windows.Controls.TextBox textBox = sender as System.Windows.Controls.TextBox;
+                double iValue = -1;
+
+                if (double.TryParse(textBox.Text, out iValue) == false || (iValue < 0 || (iValue % 1) != 0))
+                {
+                    TextChange textChange = e.Changes.ElementAt<TextChange>(0);
+                    int iAddedLength = textChange.AddedLength;
+                    int iOffset = textChange.Offset;
+
+                    textBox.Text = textBox.Text.Remove(iOffset, iAddedLength);
+                    textBox.CaretIndex = iOffset;
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "batchSize_OnTextChanged Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void emergencyStorage_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            try
+            {
+                if (((System.Windows.Controls.TextBox)sender).Text == "")
+                {
+                    MessageBox.Show("فیلد ذخیره احتیاطی نباید خالی باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                    e.Handled = true;
+                    return;
+                }
+                if (tree.SelectedItem != null && (((ItemInTree)tree.SelectedItem).ItemData.emergencyStorage != double.Parse(((System.Windows.Controls.TextBox)sender).Text)))
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "emergencyStorage_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void emergencyStorage_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                System.Windows.Controls.TextBox textBox = sender as System.Windows.Controls.TextBox;
+                double iValue = -1;
+
+                if (double.TryParse(textBox.Text, out iValue) == false || (iValue < 0))
+                {
+                    TextChange textChange = e.Changes.ElementAt<TextChange>(0);
+                    int iAddedLength = textChange.AddedLength;
+                    int iOffset = textChange.Offset;
+
+                    textBox.Text = textBox.Text.Remove(iOffset, iAddedLength);
+                    textBox.CaretIndex = iOffset;
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "emergencyStorage_OnTextChanged Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void ffff_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            try
+            {
+                if (((System.Windows.Controls.TextBox)sender).Text == "")
+                {
+                    MessageBox.Show("فیلد مقدار تخصیصی نباید خالی باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                    e.Handled = true;
+                    return;
+                }
+                if (tree.SelectedItem != null && (((ItemInTree)tree.SelectedItem).ItemData.assignedQuantity != double.Parse(((System.Windows.Controls.TextBox)sender).Text)))
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "ffff_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void ffff_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                System.Windows.Controls.TextBox textBox = sender as System.Windows.Controls.TextBox;
+                double iValue = -1;
+
+                if (double.TryParse(textBox.Text, out iValue) == false || (iValue < 0))
+                {
+                    TextChange textChange = e.Changes.ElementAt<TextChange>(0);
+                    int iAddedLength = textChange.AddedLength;
+                    int iOffset = textChange.Offset;
+
+                    textBox.Text = textBox.Text.Remove(iOffset, iAddedLength);
+                    textBox.CaretIndex = iOffset;
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "ffff_OnTextChanged Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void wasteQuantity_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            try
+            {
+                if (((System.Windows.Controls.TextBox)sender).Text == "")
+                {
+                    MessageBox.Show("فیلد مقدار ضایعات نباید خالی باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                    e.Handled = true;
+                    return;
+                }
+                if (tree.SelectedItem != null && (((ItemInTree)tree.SelectedItem).ItemData.wastedQuantity != double.Parse(((System.Windows.Controls.TextBox)sender).Text)))
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "wasteQuantity_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void wasteQuantity_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                System.Windows.Controls.TextBox textBox = sender as System.Windows.Controls.TextBox;
+                double iValue = -1;
+
+                if (double.TryParse(textBox.Text, out iValue) == false || (iValue < 0))
+                {
+                    TextChange textChange = e.Changes.ElementAt<TextChange>(0);
+                    int iAddedLength = textChange.AddedLength;
+                    int iOffset = textChange.Offset;
+
+                    textBox.Text = textBox.Text.Remove(iOffset, iAddedLength);
+                    textBox.CaretIndex = iOffset;
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "wasteQuantity_OnTextChanged Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void motaghayer_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (tree.SelectedItem != null && ((ItemInTree)tree.SelectedItem).ItemData.HasChanged)
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "motaghayer_OnLostFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void sabet_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (tree.SelectedItem != null && ((ItemInTree)tree.SelectedItem).ItemData.HasChanged)
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "sabet_OnLostFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void orderSize_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            try
+            {
+                if (((System.Windows.Controls.TextBox)sender).Text == "")
+                {
+                    MessageBox.Show("فیلد مقدار سفارش نباید خالی باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                    e.Handled = true;
+                    return;
+                }
+                if (tree.SelectedItem != null && (((ItemInTree)tree.SelectedItem).ItemData.quentity != double.Parse(((System.Windows.Controls.TextBox)sender).Text)))
+                {
+                    enableSaveCancel();
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "orderSize_PreviewLostKeyboardFocus Error description", MessageBoxButton.OK);
+            }
+        }
+
+        private void orderSize_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                System.Windows.Controls.TextBox textBox = sender as System.Windows.Controls.TextBox;
+                double iValue = -1;
+
+                if (double.TryParse(textBox.Text, out iValue) == false || (iValue < 0))
+                {
+                    TextChange textChange = e.Changes.ElementAt<TextChange>(0);
+                    int iAddedLength = textChange.AddedLength;
+                    int iOffset = textChange.Offset;
+
+                    textBox.Text = textBox.Text.Remove(iOffset, iAddedLength);
+                    textBox.CaretIndex = iOffset;
+                }
+            }
+            catch (Exception eeeee)
+            {
+                MessageBox.Show(eeeee.Message, "orderSize_OnTextChanged Error description", MessageBoxButton.OK);
             }
         }
 

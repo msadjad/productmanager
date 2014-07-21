@@ -228,8 +228,8 @@ namespace IMPOS.BLL
         {
             items.Where(r => r.HasChanged).ToList().ForEach(ee =>
                 {
-                    ee.machineType = ee.machineType ?? new MachineType(-1, "", false, false, false, "");
-                    ee.supplier = ee.supplier ?? new Supplier(-1, "", "", "", "", "");
+                    //ee.machineType = ee.machineType ?? new MachineType(-1, "", false, false, false, "");
+                    //ee.supplier = ee.supplier ?? new Supplier(-1, "", "", "", "", "");
                     if (ee.id == 0)
                     {
                         var id = ItemQuery.addNewItemWithParameters(
@@ -259,13 +259,13 @@ namespace IMPOS.BLL
                                                         ee.emergencyStorage ?? -1,
                                                         ee.wastedQuantity ?? -1,
                                                         ee.operationName,
-                                                        ee.machineType.ID,
+                                                        ee.machineType != null ? ee.machineType.ID:-1,
                                                         ee.prepareTime ?? -1,
                                                         ee.buildUnitTime ?? -1,
                                                         ee.shipmentTime ?? -1,
                                                         ee.transmitGroupSize??-1,
                                                         ee.operationDescription,
-                                                        ee.supplier.ID,
+                                                        ee.supplier != null ? ee.supplier.ID:-1,
                                                         ee.supplyTime ?? -1);
                         ee.itemSaved(ee.id);
                     }
@@ -783,13 +783,13 @@ namespace IMPOS.BLL
                                         _emergencyStorage ?? -1,
                                         _wastedQuantity ?? -1,
                                         _operationName,
-                                        _machineType.ID,
+                                        _machineType != null ?_machineType.ID:-1,
                                         _prepareTime ?? -1,
                                         _buildUnitTime ?? -1,
                                         _shipmentTime ?? -1,
                                         _transmitGroupSize??0,
                                         _operationDescription,
-                                        _supplier.ID,
+                                        _supplier != null ? _supplier.ID:-1,
                                         _supplyTime ?? -1);
         
             

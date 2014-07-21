@@ -1297,13 +1297,13 @@ namespace IMPOS.ViewModel
                                 BeforeSelection = CurrentGroup.ItemData.id;
                             else
                                 BeforeSelection = null;
-                            BLL.Items.ClearAllItems();
-                            _items = BLL.Items.allItems;
-                            LoadGroupData();
+                            //BLL.Items.ClearAllItems();
+                            //_items = BLL.Items.allItems;
+                            //LoadGroupData();
 
                             //}
-                            OnPropertyChanged("Groups");
-                            OnPropertyChanged("CurrentGroup");
+                            //OnPropertyChanged("Groups");
+                            //OnPropertyChanged("CurrentGroup");
                             NewActivated = false;
                             //_treeItemLoaded.Invoke();
                             break;
